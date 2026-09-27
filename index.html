@@ -212,14 +212,20 @@
   .more-menu {
     position: fixed; left: 16px; right: 16px; top: 50%; transform: translateY(-50%) scale(0.96);
     z-index: 1400; background: var(--parchment); border: 1px solid var(--gold);
-    box-shadow: 0 14px 36px rgba(20,14,6,0.45);
-    padding: 22px 20px calc(18px + env(safe-area-inset-bottom)); font-family: var(--sans);
+    box-shadow: 0 14px 36px rgba(20,14,6,0.45); font-family: var(--sans);
     max-width: 420px; margin: 0 auto; box-sizing: border-box;
     display: none; opacity: 0; transition: opacity .3s ease, transform .3s ease;
-    max-height: 78vh; overflow-y: auto;
+    max-height: 78vh; overflow: hidden;
   }
   .more-menu.show { display: block; }
   .more-menu.visible { opacity: 1; transform: translateY(-50%) scale(1); }
+  /* Внутренняя прокрутка — сама карточка (.more-menu) больше не скроллится,
+     иначе виньетка в нижнем углу уезжает вместе с прокруткой и её не видно
+     без скролла. Скроллится только содержимое внутри. */
+  .more-menu-scroll {
+    max-height: 78vh; overflow-y: auto;
+    padding: 22px 20px calc(18px + env(safe-area-inset-bottom));
+  }
   .more-menu-title {
     font-family: 'EB Garamond', serif; font-size: 20px; font-weight: 700; line-height: 1.25;
     color: var(--terracotta); margin: 0 0 10px; text-align: center;
@@ -412,10 +418,15 @@
      по всем четырём сторонам, а не «шторка» снизу. */
   .premium-popup-card {
     background: var(--parchment); border: 1px solid var(--gold);
-    padding: 22px 20px calc(18px + env(safe-area-inset-bottom));
     max-width: 420px; width: calc(100% - 32px); font-family: var(--sans);
-    max-height: 78vh; overflow-y: auto; box-sizing: border-box;
+    max-height: 78vh; overflow: hidden; box-sizing: border-box;
     text-align: center; position: relative; z-index: 0;
+  }
+  /* Внутренняя прокрутка — сама карточка не скроллится, иначе виньетка в
+     нижнем углу уезжает вместе с прокруткой и её не видно без скролла. */
+  .premium-popup-scroll {
+    max-height: 78vh; overflow-y: auto;
+    padding: 22px 20px calc(18px + env(safe-area-inset-bottom));
   }
   .premium-popup-card h4 {
     margin: 0 0 10px; color: var(--terracotta); font-family: 'EB Garamond', serif;
@@ -429,10 +440,13 @@
     text-decoration: underline; text-underline-offset: 2px; cursor: pointer;
   }
   .premium-teaser {
-    position: relative; width: 100%; height: 150px; border-radius: 14px;
+    position: relative; width: 100%; height: 100px; border-radius: 14px;
     overflow: hidden; margin-bottom: 16px; border: 1px solid var(--gold);
-    background: radial-gradient(circle at 30% 30%, #f4b860, #7a5230 60%, #3a2a1a);
-    filter: blur(7px); transform: scale(1.08);
+    background: #7a5230;
+  }
+  .premium-teaser-img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    filter: blur(7px); transform: scale(1.12);
   }
   .premium-teaser-lock {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
@@ -630,31 +644,36 @@
   <div class="premium-popup-card">
     <img class="vignette-corner tl" src="border_image_eck.png" alt="">
     <img class="vignette-corner br" src="border_image_eck.png" alt="">
-    <h4 id="premiumPopupTitle">Another View</h4>
-    <p id="premiumPopupText">An artistic, painterly view of this place is available in the extended guide. Message the guide for an access code to unlock it.</p>
+    <div class="premium-popup-scroll">
+      <h4 id="premiumPopupTitle">Another View</h4>
+      <p id="premiumPopupText">An artistic, painterly view of this place is available in the extended guide. Message the guide for an access code to unlock it.</p>
 
-    <div id="premiumLockedBlock">
-      <div class="premium-teaser" id="premiumTeaser"><div class="premium-teaser-lock">
-        <div style="display:flex; align-items:center; gap:8px; background:rgba(20,14,6,0.6); border:1px solid rgba(255,255,255,0.5); border-radius:20px; padding:8px 16px;">
-          <span style="color:#fff; font-size:16px;">🔒</span>
-          <span style="color:#fff; font-size:13px; font-weight:600;" id="premiumLockedLabel">Locked</span>
+      <div id="premiumLockedBlock">
+        <div class="premium-teaser" id="premiumTeaser">
+          <img class="premium-teaser-img" src="premium-teaser.jpg" alt="">
+          <div class="premium-teaser-lock">
+            <div style="display:flex; align-items:center; gap:8px; background:rgba(20,14,6,0.6); border:1px solid rgba(255,255,255,0.5); border-radius:20px; padding:8px 16px;">
+              <span style="color:#fff; font-size:16px;">🔒</span>
+              <span style="color:#fff; font-size:13px; font-weight:600;" id="premiumLockedLabel">Locked</span>
+            </div>
+          </div>
         </div>
-      </div></div>
-      <div class="premium-code-row">
-        <input type="text" class="premium-code-input" id="premiumCodeInput" autocomplete="off" autocapitalize="off">
+        <div class="premium-code-row">
+          <input type="text" class="premium-code-input" id="premiumCodeInput" autocomplete="off" autocapitalize="off">
+        </div>
+        <p class="premium-code-error" id="premiumCodeError"></p>
+        <button class="premium-unlock-btn" id="premiumUnlockBtn">Unlock</button>
+        <div class="premium-ask-hint" id="premiumAskHint">No code? Ask your guide.</div>
       </div>
-      <p class="premium-code-error" id="premiumCodeError"></p>
-      <button class="premium-unlock-btn" id="premiumUnlockBtn">Unlock</button>
-      <div class="premium-ask-hint" id="premiumAskHint">No code? Ask your guide.</div>
-    </div>
 
-    <div id="premiumUnlockedBlock" style="display:none;">
-      <p id="premiumUnlockedIntro" style="margin:0 0 14px; font-size:14px; line-height:1.5; color:var(--ink);">Access granted.</p>
-      <a class="premium-unlock-btn" id="premiumOpenLink" href="#" target="_blank" rel="noopener" style="display:block; text-decoration:none; text-align:center; box-sizing:border-box;">Open the artwork →</a>
-      <p id="premiumUnlockedFallback" style="display:none; margin-top:12px;">Artwork coming soon for this location.</p>
-    </div>
+      <div id="premiumUnlockedBlock" style="display:none;">
+        <p id="premiumUnlockedIntro" style="margin:0 0 14px; font-size:14px; line-height:1.5; color:var(--ink);">Access granted.</p>
+        <a class="premium-unlock-btn" id="premiumOpenLink" href="#" target="_blank" rel="noopener" style="display:block; text-decoration:none; text-align:center; box-sizing:border-box;">Open the artwork →</a>
+        <p id="premiumUnlockedFallback" style="display:none; margin-top:12px;">Artwork coming soon for this location.</p>
+      </div>
 
-    <button class="premium-popup-close" id="premiumPopupClose">OK</button>
+      <button class="premium-popup-close" id="premiumPopupClose">OK</button>
+    </div>
   </div>
 </div>
 
@@ -664,8 +683,10 @@
   <img class="vignette-corner tl" src="border_image_eck.png" alt="">
   <img class="vignette-corner br" src="border_image_eck.png" alt="">
   <button class="more-menu-close" id="moreMenuClose">✕</button>
-  <div class="more-menu-title" id="moreMenuTitle">Title</div>
-  <div class="more-menu-body" id="moreMenuBody"></div>
+  <div class="more-menu-scroll">
+    <div class="more-menu-title" id="moreMenuTitle">Title</div>
+    <div class="more-menu-body" id="moreMenuBody"></div>
+  </div>
 </div>
 
 <!-- ПОМОЩНИК-ПОДСКАЗКА: появляется при признаках "потерянности" (частые метания между вкладками) -->
