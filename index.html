@@ -196,18 +196,18 @@
   }
   .more-menu-backdrop.show { display: block; }
   .more-menu-backdrop.visible { opacity: 1; }
-  /* Уголки-виньетки — один файл (угол + две линии почти во всю длину
-     холста), остальные три угла получаются отражением через CSS. Каждая
-     копия растянута на весь попап, поэтому линии доходят до противоположных
-     краёв, а отражения совмещаются в линию по каждой стороне. */
+  /* Уголки-виньетки — один файл (угол + отходящие линии), остальные три
+     угла получаются отражением через CSS. Фиксированный размер (а не во
+     весь попап) — иначе в высоких окнах (премиум-попап с полем ввода и
+     кнопкой) узор растягивается и налезает на заголовок/текст. */
   .vignette-corner {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    object-fit: fill; pointer-events: none; z-index: -1;
+    position: absolute; width: 74px; height: 74px; opacity: 0.9;
+    object-fit: contain; pointer-events: none; z-index: -1;
   }
-  .vignette-corner.tl { transform: scale(-1, -1); }
-  .vignette-corner.tr { transform: scaleY(-1); }
-  .vignette-corner.bl { transform: scaleX(-1); }
-  .vignette-corner.br { }
+  .vignette-corner.tl { top: -4px; left: -4px; transform: scale(-1, -1); }
+  .vignette-corner.tr { top: -4px; right: -4px; transform: scaleY(-1); }
+  .vignette-corner.bl { bottom: -4px; left: -4px; transform: scaleX(-1); }
+  .vignette-corner.br { bottom: -4px; right: -4px; }
 
   .more-menu {
     position: fixed; left: 16px; right: 16px; top: 50%; transform: translateY(-50%) scale(0.96);
@@ -629,8 +629,6 @@
 <div class="premium-popup" id="premiumPopup">
   <div class="premium-popup-card">
     <img class="vignette-corner tl" src="border_image_eck.png" alt="">
-    <img class="vignette-corner tr" src="border_image_eck.png" alt="">
-    <img class="vignette-corner bl" src="border_image_eck.png" alt="">
     <img class="vignette-corner br" src="border_image_eck.png" alt="">
     <h4 id="premiumPopupTitle">Another View</h4>
     <p id="premiumPopupText">An artistic, painterly view of this place is available in the extended guide. Message the guide for an access code to unlock it.</p>
@@ -664,8 +662,6 @@
 <div class="more-menu-backdrop" id="moreMenuBackdrop"></div>
 <div class="more-menu" id="moreMenu">
   <img class="vignette-corner tl" src="border_image_eck.png" alt="">
-  <img class="vignette-corner tr" src="border_image_eck.png" alt="">
-  <img class="vignette-corner bl" src="border_image_eck.png" alt="">
   <img class="vignette-corner br" src="border_image_eck.png" alt="">
   <button class="more-menu-close" id="moreMenuClose">✕</button>
   <div class="more-menu-title" id="moreMenuTitle">Title</div>
@@ -676,8 +672,6 @@
 <div class="help-bubble-backdrop" id="helpBubbleBackdrop"></div>
 <div class="help-bubble" id="helpBubble">
   <img class="vignette-corner tl" src="border_image_eck.png" alt="">
-  <img class="vignette-corner tr" src="border_image_eck.png" alt="">
-  <img class="vignette-corner bl" src="border_image_eck.png" alt="">
   <img class="vignette-corner br" src="border_image_eck.png" alt="">
   <button class="more-menu-close" id="helpBubbleClose">✕</button>
   <div class="help-bubble-row">
