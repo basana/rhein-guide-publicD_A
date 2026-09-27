@@ -171,16 +171,19 @@
   }
 
   /* Указатели к основным разделам — сразу под уменьшенным фото первого экрана */
-  .quick-links { display: flex; gap: 10px; margin-bottom: 18px; font-family: var(--sans); }
-  .quick-link {
-    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
-    background: var(--parchment-deep); border: 1px solid var(--gold); border-radius: 12px;
-    padding: 12px 8px; cursor: pointer; color: var(--ink);
+  .quick-links {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    margin-bottom: 18px; font-family: var(--sans);
   }
-  .quick-link-icon { font-size: 22px; line-height: 1; }
-  .quick-link-label { font-size: 12.5px; font-weight: 700; }
+  .quick-link {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: var(--parchment-deep); border: 1.5px solid var(--ql-color, var(--gold));
+    border-radius: 12px; padding: 10px 6px; cursor: pointer; color: var(--ql-color, var(--ink));
+  }
+  .quick-link-icon { font-size: 21px; line-height: 1; }
+  .quick-link-label { font-size: 11px; font-weight: 700; text-align: center; line-height: 1.15; }
 
-  /* Всплывающее меню «Ещё» — список второстепенных разделов одним пунктом */
+  /* Всплывающее окно с содержимым пункта (Экскурсии / Контакты / Обо мне) */
   .more-menu-backdrop {
     position: fixed; inset: 0; z-index: 1390; background: rgba(20,14,6,0.38);
     display: none; opacity: 0; transition: opacity .3s ease;
@@ -192,17 +195,16 @@
     z-index: 1400; background: var(--parchment); border: 1px solid var(--gold); border-radius: 18px;
     box-shadow: 0 14px 36px rgba(20,14,6,0.45); padding: 18px; font-family: var(--sans);
     display: none; opacity: 0; transition: opacity .3s ease, transform .3s ease;
+    max-height: 78vh; overflow-y: auto;
   }
   .more-menu.show { display: block; }
   .more-menu.visible { opacity: 1; transform: translateY(-50%) scale(1); }
-  .more-menu-title { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 12px; }
-  .more-menu-item {
-    display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
-    background: var(--parchment-deep); border: 1.5px solid var(--item-color, var(--gold));
-    color: var(--item-color, var(--ink)); border-radius: 12px; padding: 12px 14px;
-    font-family: var(--sans); font-size: 14.5px; font-weight: 700; cursor: pointer; margin-bottom: 8px;
-  }
-  .more-menu-item .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--item-color, var(--gold)); flex: 0 0 auto; }
+  .more-menu-title { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 12px; padding-right: 24px; }
+  .more-menu-body { font-size: 14px; line-height: 1.6; color: var(--ink); }
+  .more-menu-body p { margin: 0 0 10px; }
+  .more-menu-body ul { margin: 0 0 10px; padding-left: 18px; }
+  .more-menu-body li { margin-bottom: 4px; }
+  .more-menu-body a { color: var(--terracotta); font-weight: 700; }
   .more-menu-close {
     position: absolute; top: 14px; right: 14px; width: 26px; height: 26px; border-radius: 50%; border: none;
     background: rgba(90,67,39,0.12); color: var(--ink-soft); font-size: 13px; cursor: pointer;
@@ -617,14 +619,12 @@
   </div>
 </div>
 
-<!-- МЕНЮ «ЕЩЁ»: второстепенные разделы одним пунктом -->
+<!-- ВСПЛЫВАЮЩЕЕ ОКНО: содержимое пунктов «Экскурсии» / «Контакты» / «Обо мне» -->
 <div class="more-menu-backdrop" id="moreMenuBackdrop"></div>
 <div class="more-menu" id="moreMenu">
   <button class="more-menu-close" id="moreMenuClose">✕</button>
-  <div class="more-menu-title" id="moreMenuTitle">More</div>
-  <button class="more-menu-item" id="moreMenuLegends" data-view="legends" style="--item-color:#7B4B8A"><span class="dot"></span><span id="moreMenuLegendsLabel"></span></button>
-  <button class="more-menu-item" id="moreMenuInfo" data-view="info" style="--item-color:#4A6B4E"><span class="dot"></span><span id="moreMenuInfoLabel"></span></button>
-  <button class="more-menu-item" id="moreMenuRoute" data-view="route" style="--item-color:#A83232"><span class="dot"></span><span id="moreMenuRouteLabel"></span></button>
+  <div class="more-menu-title" id="moreMenuTitle">Title</div>
+  <div class="more-menu-body" id="moreMenuBody"></div>
 </div>
 
 <!-- ПОМОЩНИК-ПОДСКАЗКА: появляется при признаках "потерянности" (частые метания между вкладками) -->
@@ -677,13 +677,29 @@
       <!-- УКАЗАТЕЛИ К ОСНОВНЫМ РАЗДЕЛАМ — видны сразу под фото первого экрана,
            не нужно листать/угадывать, что есть в приложении -->
       <div class="quick-links" id="quickLinks">
-        <button class="quick-link" id="quickLinkMap">
-          <span class="quick-link-icon">🗺️</span>
-          <span class="quick-link-label" id="quickLinkMapLabel">Map</span>
+        <button class="quick-link" id="qlLocations" style="--ql-color:#C08A2E">
+          <span class="quick-link-icon">📍</span>
+          <span class="quick-link-label" id="qlLocationsLabel">Locations</span>
         </button>
-        <button class="quick-link" id="quickLinkMore">
-          <span class="quick-link-icon">✦</span>
-          <span class="quick-link-label" id="quickLinkMoreLabel">More</span>
+        <button class="quick-link" id="qlMap" style="--ql-color:#3a6ea5">
+          <span class="quick-link-icon">🗺️</span>
+          <span class="quick-link-label" id="qlMapLabel">Map</span>
+        </button>
+        <button class="quick-link" id="qlInfo" style="--ql-color:#4A6B4E">
+          <span class="quick-link-icon">📖</span>
+          <span class="quick-link-label" id="qlInfoLabel">Facts</span>
+        </button>
+        <button class="quick-link" id="qlTours" style="--ql-color:#B5602E">
+          <span class="quick-link-icon">🧭</span>
+          <span class="quick-link-label" id="qlToursLabel">Tours</span>
+        </button>
+        <button class="quick-link" id="qlContact" style="--ql-color:#A83232">
+          <span class="quick-link-icon">✉️</span>
+          <span class="quick-link-label" id="qlContactLabel">Contact</span>
+        </button>
+        <button class="quick-link" id="qlAbout" style="--ql-color:#7B4B8A">
+          <span class="quick-link-icon">👤</span>
+          <span class="quick-link-label" id="qlAboutLabel">About me</span>
         </button>
       </div>
 
@@ -1325,7 +1341,7 @@ const UI = {
     helpBubbleShow: 'Show the menu', helpBubbleDismiss: 'No, thanks',
     helpBubbleTextGps: 'Live GPS distance to the nearest castle is part of the bonus edition.',
     helpBubbleShowGps: 'Learn more',
-    quickLinkMore: 'More', moreMenuTitle: 'More'
+    qlTours: 'Tours', qlContact: 'Contact', qlAbout: 'About me'
   },
   ru: {
     tabs: ['Гид', 'Точки', 'Карта', 'Легенды', 'Инфо', 'Маршрут'],
@@ -1366,7 +1382,7 @@ const UI = {
     helpBubbleShow: 'Показать меню', helpBubbleDismiss: 'Нет, спасибо',
     helpBubbleTextGps: 'GPS и расстояние до ближайшего замка доступны в бонусной версии.',
     helpBubbleShowGps: 'Узнать больше',
-    quickLinkMore: 'Ещё', moreMenuTitle: 'Ещё'
+    qlTours: 'Экскурсии', qlContact: 'Контакты', qlAbout: 'Обо мне'
   }
 };
 
@@ -1596,28 +1612,89 @@ document.addEventListener('click', (e) => {
 }, true);
 
 /* ============================================================
-   УКАЗАТЕЛИ К РАЗДЕЛАМ на первом экране (под уменьшенным фото)
-   + меню «Ещё» со второстепенными разделами одним списком.
+   6 УКАЗАТЕЛЕЙ на первом экране (под уменьшенным фото):
+   Локации / Карта / Инфо — ведут на существующие вкладки;
+   Экскурсии / Контакты / Обо мне — открывают всплывающее окно
+   с готовым текстом (INFO_POPUPS ниже).
    ============================================================ */
+const INFO_POPUPS = {
+  tours: {
+    en: {
+      title: 'Guided tours',
+      body: `<p>As a certified guide (BVGD) I offer:</p>
+        <ul>
+          <li>City walking tours</li>
+          <li>Hikes in the vineyards and along the Rhine</li>
+          <li>Themed excursions</li>
+          <li>Travel companion services for groups</li>
+        </ul>
+        <p>Available year-round around Koblenz and the Rhine Gorge.</p>`
+    },
+    ru: {
+      title: 'Экскурсии',
+      body: `<p>Как сертифицированный гид (BVGD) провожу:</p>
+        <ul>
+          <li>Пешеходные экскурсии по городу</li>
+          <li>Походы по виноградникам и вдоль Рейна</li>
+          <li>Тематические экскурсии</li>
+          <li>Сопровождение групп в поездках</li>
+        </ul>
+        <p>Круглый год, в Кобленце и Рейнском ущелье.</p>`
+    }
+  },
+  contact: {
+    en: {
+      title: 'Contact & booking',
+      body: `<p>Phone / WhatsApp: <a href="tel:+491772850207">+49 177 285 0207</a></p>
+        <p>Get in touch to check availability and book a tour.</p>`
+    },
+    ru: {
+      title: 'Контакты и бронирование',
+      body: `<p>Телефон / WhatsApp: <a href="tel:+491772850207">+49 177 285 0207</a></p>
+        <p>Напишите или позвоните, чтобы узнать о свободных датах и забронировать экскурсию.</p>`
+    }
+  },
+  about: {
+    en: {
+      title: 'About me',
+      body: `<p>Certified tour guide (BVGD), based in Koblenz. I speak Russian, German and English, and work with tour operators (Travmondo, Saga, Viking) as well as private groups.</p>
+        <p>Postcards from this app are also available to order — ask via contact.</p>`
+    },
+    ru: {
+      title: 'Обо мне',
+      body: `<p>Сертифицированный гид (BVGD), живу в Кобленце. Говорю по-русски, по-немецки и по-английски, работаю с туроператорами (Travmondo, Saga, Viking), а также с частными группами.</p>
+        <p>Открытки из этого приложения тоже можно заказать — напишите через контакты.</p>`
+    }
+  }
+};
+
 function renderQuickLinksText() {
   const t = UI[lang];
-  const mapLbl = document.getElementById('quickLinkMapLabel');
-  const moreLbl = document.getElementById('quickLinkMoreLabel');
-  if (mapLbl) mapLbl.textContent = t.tabs[2]; // «Карта» / «Map»
-  if (moreLbl) moreLbl.textContent = t.quickLinkMore;
 
-  const title = document.getElementById('moreMenuTitle');
-  if (title) title.textContent = t.moreMenuTitle;
-  const lg = document.getElementById('moreMenuLegendsLabel');
-  const inf = document.getElementById('moreMenuInfoLabel');
-  const rt = document.getElementById('moreMenuRouteLabel');
-  if (lg) lg.textContent = t.tabs[3];
-  if (inf) inf.textContent = t.tabs[4];
-  if (rt) rt.textContent = t.tabs[5];
+  // Указатели видны только на самом первом экране (Кобленц) — на остальных
+  // локациях до всех разделов и так уже можно дойти через обычное меню.
+  const quickLinks = document.getElementById('quickLinks');
+  if (quickLinks) quickLinks.style.display = (index === 0) ? 'grid' : 'none';
+
+  const setLbl = (id, text) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  };
+  setLbl('qlLocationsLabel', t.tabs[1]);
+  setLbl('qlMapLabel', t.tabs[2]);
+  setLbl('qlInfoLabel', t.tabs[4]);
+  setLbl('qlToursLabel', t.qlTours);
+  setLbl('qlContactLabel', t.qlContact);
+  setLbl('qlAboutLabel', t.qlAbout);
 }
 
-function openMoreMenu() {
-  renderQuickLinksText();
+function openInfoPopup(kind) {
+  const data = INFO_POPUPS[kind][lang] || INFO_POPUPS[kind].en;
+  const title = document.getElementById('moreMenuTitle');
+  const body = document.getElementById('moreMenuBody');
+  if (title) title.textContent = data.title;
+  if (body) body.innerHTML = data.body;
+
   const el = document.getElementById('moreMenu');
   const backdrop = document.getElementById('moreMenuBackdrop');
   el.classList.add('show');
@@ -1638,20 +1715,23 @@ function closeMoreMenu() {
   }, 300);
 }
 
-const quickLinkMapBtn = document.getElementById('quickLinkMap');
-if (quickLinkMapBtn) quickLinkMapBtn.addEventListener('click', () => switchView('map'));
-const quickLinkMoreBtn = document.getElementById('quickLinkMore');
-if (quickLinkMoreBtn) quickLinkMoreBtn.addEventListener('click', openMoreMenu);
+const qlLocationsBtn = document.getElementById('qlLocations');
+if (qlLocationsBtn) qlLocationsBtn.addEventListener('click', () => switchView('castles'));
+const qlMapBtn = document.getElementById('qlMap');
+if (qlMapBtn) qlMapBtn.addEventListener('click', () => switchView('map'));
+const qlInfoBtn = document.getElementById('qlInfo');
+if (qlInfoBtn) qlInfoBtn.addEventListener('click', () => switchView('info'));
+const qlToursBtn = document.getElementById('qlTours');
+if (qlToursBtn) qlToursBtn.addEventListener('click', () => openInfoPopup('tours'));
+const qlContactBtn = document.getElementById('qlContact');
+if (qlContactBtn) qlContactBtn.addEventListener('click', () => openInfoPopup('contact'));
+const qlAboutBtn = document.getElementById('qlAbout');
+if (qlAboutBtn) qlAboutBtn.addEventListener('click', () => openInfoPopup('about'));
+
 const moreMenuCloseBtn = document.getElementById('moreMenuClose');
 if (moreMenuCloseBtn) moreMenuCloseBtn.addEventListener('click', closeMoreMenu);
 const moreMenuBackdropEl = document.getElementById('moreMenuBackdrop');
 if (moreMenuBackdropEl) moreMenuBackdropEl.addEventListener('click', closeMoreMenu);
-document.querySelectorAll('.more-menu-item').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    closeMoreMenu();
-    switchView(btn.dataset.view);
-  });
-});
 
 // Делит текст на два примерно равных по длине куска (по границе слова),
 // для «расходящейся» двухколоночной вёрстки (обе половины тянутся к разделителю).
