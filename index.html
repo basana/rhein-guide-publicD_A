@@ -192,18 +192,25 @@
   .more-menu-backdrop.visible { opacity: 1; }
   .more-menu {
     position: fixed; left: 16px; right: 16px; top: 50%; transform: translateY(-50%) scale(0.96);
-    z-index: 1400; background: var(--parchment); border: 1px solid var(--gold); border-radius: 18px;
-    box-shadow: 0 14px 36px rgba(20,14,6,0.45); padding: 18px; font-family: var(--sans);
+    z-index: 1400; background: var(--parchment); border: 8px solid var(--gold);
+    border-image: url('img/frame-vignette.jpg') 130 fill stretch;
+    border-image-width: 26px;
+    box-shadow: 0 14px 36px rgba(20,14,6,0.45);
+    padding: 22px 20px calc(18px + env(safe-area-inset-bottom)); font-family: var(--sans);
+    max-width: 420px; margin: 0 auto; box-sizing: border-box;
     display: none; opacity: 0; transition: opacity .3s ease, transform .3s ease;
     max-height: 78vh; overflow-y: auto;
   }
   .more-menu.show { display: block; }
   .more-menu.visible { opacity: 1; transform: translateY(-50%) scale(1); }
-  .more-menu-title { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 12px; padding-right: 24px; }
-  .more-menu-body { font-size: 14px; line-height: 1.6; color: var(--ink); }
-  .more-menu-body p { margin: 0 0 10px; }
-  .more-menu-body ul { margin: 0 0 10px; padding-left: 18px; }
-  .more-menu-body li { margin-bottom: 4px; }
+  .more-menu-title {
+    font-family: 'EB Garamond', serif; font-size: 20px; font-weight: 700; line-height: 1.25;
+    color: var(--terracotta); margin: 0 0 10px; text-align: center;
+  }
+  .more-menu-body { font-size: 14.5px; line-height: 1.55; color: var(--ink); text-align: center; }
+  .more-menu-body p { margin: 0 0 16px; }
+  .more-menu-body ul { margin: 0 0 16px; padding: 0; list-style: none; }
+  .more-menu-body li { margin-bottom: 6px; }
   .more-menu-body a { color: var(--terracotta); font-weight: 700; }
   .more-menu-close {
     position: absolute; top: 14px; right: 14px; width: 26px; height: 26px; border-radius: 50%; border: none;
@@ -379,17 +386,28 @@
   }
   .premium-popup {
     position: fixed; inset: 0; z-index: 4000; display: none;
-    align-items: flex-end; justify-content: center;
+    align-items: center; justify-content: center;
     background: rgba(20,14,6,0.55);
   }
   .premium-popup.open { display: flex; }
+  /* Та же форма и рамка, что у остальных всплывающих окон (подсказка,
+     Экскурсии/Контакты/Обо мне) — центрированная карточка с виньеткой
+     по всем четырём сторонам, а не «шторка» снизу. */
   .premium-popup-card {
-    background: var(--parchment); border: 1.5px solid var(--gold); border-radius: 16px 16px 0 0;
-    padding: 22px var(--pad) calc(22px + env(safe-area-inset-bottom));
-    max-width: 580px; width: 100%; font-family: var(--sans);
+    background: var(--parchment); border: 8px solid var(--gold);
+    border-image: url('img/frame-vignette.jpg') 130 fill stretch;
+    border-image-width: 26px;
+    padding: 22px 20px calc(18px + env(safe-area-inset-bottom));
+    max-width: 420px; width: calc(100% - 32px); font-family: var(--sans);
+    max-height: 78vh; overflow-y: auto; box-sizing: border-box;
+    text-align: center;
   }
-  .premium-popup-card h4 { margin: 0 0 8px; color: var(--terracotta); font-family: 'EB Garamond', serif; font-size: 19px; }
-  .premium-popup-card p { margin: 0 0 16px; font-size: 14px; line-height: 1.5; color: var(--ink); }
+  .premium-popup-card h4 {
+    margin: 0 0 10px; color: var(--terracotta); font-family: 'EB Garamond', serif;
+    font-size: 20px; font-weight: 700; line-height: 1.25;
+  }
+  .premium-popup-card p { margin: 0 0 16px; font-size: 14.5px; line-height: 1.55; color: var(--ink); }
+  .premium-code-input { text-align: left; }
   .premium-popup-close {
     display: block; width: 100%; margin-top: 10px; padding: 8px; border: none; background: none;
     color: var(--ink-soft); font-size: 13px; font-weight: 600; text-align: center;
@@ -523,23 +541,29 @@
   .help-bubble-backdrop.visible { opacity: 1; }
 
   .help-bubble {
-    position: fixed; left: 16px; right: 16px; top: 42%; transform: translateY(-50%) scale(0.96);
+    position: fixed; left: 16px; right: 16px; top: 50%; transform: translateY(-50%) scale(0.96);
     z-index: 1400;
-    background: var(--parchment); border: 1px solid var(--gold); border-radius: 18px;
-    border-left: 6px solid #3a6ea5;
+    background: var(--parchment); border: 8px solid var(--gold);
+    border-image: url('img/frame-vignette.jpg') 130 fill stretch;
+    border-image-width: 26px;
     box-shadow: 0 14px 36px rgba(20,14,6,0.45);
-    padding: 18px 18px 16px; font-family: var(--sans); color: var(--ink);
+    padding: 22px 20px calc(18px + env(safe-area-inset-bottom));
+    max-width: 420px; margin: 0 auto; box-sizing: border-box;
+    font-family: var(--sans); color: var(--ink);
     display: none; opacity: 0;
-    transition: opacity .35s ease, transform .35s ease, border-left-color .2s ease;
+    transition: opacity .35s ease, transform .35s ease;
   }
-  /* Синяя полоса+иконка компаса = «подсказка по меню»; терракотовая+замочек = «премиум/GPS».
-     Одно и то же оформление всплывающих подсказок иначе выглядело бы одинаково, а по смыслу это разные вещи. */
-  .help-bubble.mode-gps { border-left-color: var(--terracotta); }
+  /* Раньше режимы отличались цветом полосы слева — теперь рамка-виньетка одна для
+     обоих, режимы по-прежнему различаются иконкой (🧭 меню / 🔓 GPS) и текстом. */
   .help-bubble.show { display: block; }
   .help-bubble.visible { opacity: 1; transform: translateY(-50%) scale(1); }
-  .help-bubble-row { display: flex; align-items: flex-start; gap: 12px; }
-  .help-bubble-icon { font-size: 26px; line-height: 1; margin-top: 1px; }
-  .help-bubble-text { flex: 1; font-size: 16.5px; font-weight: 700; line-height: 1.4; }
+  .help-bubble-row {
+    display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+  }
+  .help-bubble-icon { font-size: 28px; line-height: 1; }
+  .help-bubble-text {
+    font-family: 'EB Garamond', serif; font-size: 19px; font-weight: 700; line-height: 1.3;
+  }
   .help-bubble-close {
     flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; border: none;
     background: rgba(90,67,39,0.12); color: var(--ink-soft); font-size: 13px; cursor: pointer;
@@ -630,10 +654,10 @@
 <!-- ПОМОЩНИК-ПОДСКАЗКА: появляется при признаках "потерянности" (частые метания между вкладками) -->
 <div class="help-bubble-backdrop" id="helpBubbleBackdrop"></div>
 <div class="help-bubble" id="helpBubble">
+  <button class="more-menu-close" id="helpBubbleClose">✕</button>
   <div class="help-bubble-row">
     <span class="help-bubble-icon" id="helpBubbleIcon">🧭</span>
     <span class="help-bubble-text" id="helpBubbleText">Показать, что где находится?</span>
-    <button class="help-bubble-close" id="helpBubbleClose">✕</button>
   </div>
   <div class="help-bubble-actions">
     <button class="help-bubble-btn" id="helpBubbleShow">Да, покажи</button>
