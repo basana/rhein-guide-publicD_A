@@ -347,6 +347,15 @@
     /* Лёгкая подстраховка — основное затемнение теперь в самом фото. */
     background: linear-gradient(180deg, rgba(12,8,4,0) 55%, rgba(12,8,4,0.22) 100%);
   }
+  /* Водяной знак-эмблема на сплэше, тем же приёмом, что и внутри сайта
+     (см. .app::before), но чуть заметнее — фон тут не ровный, а фото. */
+  .splash img.splash-watermark {
+    position: absolute; z-index: 0; pointer-events: none;
+    inset: auto; bottom: -10px; right: -10px; top: auto; left: auto;
+    width: 230px; height: 230px;
+    object-fit: contain; opacity: 0.3;
+    filter: brightness(0) invert(1);
+  }
   .splash-content { position: relative; z-index: 1; padding: 0 var(--pad) calc(36px + env(safe-area-inset-bottom)); color: var(--cream-text); }
   .splash-eyebrow {
     font-family: var(--sans); font-size: 12.5px; letter-spacing: 0.19em; text-transform: uppercase;
@@ -628,6 +637,7 @@
 <div class="splash" id="splash">
   <img src="hero-bacharach.jpg" alt="Bacharach, Rhine Gorge">
   <div class="splash-gradient"></div>
+  <img class="splash-watermark" src="emblem.png" alt="">
   <div class="splash-lang">
     <span class="splash-lang-btn" data-lang="en">EN</span>
     <span class="splash-lang-btn" data-lang="ru">RU</span>
