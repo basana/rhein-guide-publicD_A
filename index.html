@@ -347,14 +347,16 @@
     /* Лёгкая подстраховка — основное затемнение теперь в самом фото. */
     background: linear-gradient(180deg, rgba(12,8,4,0) 55%, rgba(12,8,4,0.22) 100%);
   }
-  /* Водяной знак-эмблема на сплэше, тем же приёмом, что и внутри сайта
-     (см. .app::before), но чуть заметнее — фон тут не ровный, а фото. */
+  /* Водяной знак-штамп на сплэше — та же картинка emblem-stamp.png, что и
+     внутри сайта (см. .app::before). У файла белый (непрозрачный) фон,
+     поэтому наложение через mix-blend-mode: multiply — белое сливается с
+     фото, тёмные линии проступают как настоящий оттиск штампа. */
   .splash img.splash-watermark {
     position: absolute; z-index: 0; pointer-events: none;
-    inset: auto; bottom: -10px; right: -10px; top: auto; left: auto;
-    width: 230px; height: 230px;
-    object-fit: contain; opacity: 0.3;
-    filter: brightness(0) invert(1);
+    inset: auto; bottom: 6px; right: -14px; top: auto; left: auto;
+    width: 200px; height: 200px;
+    object-fit: contain; opacity: 0.5;
+    mix-blend-mode: multiply;
   }
   .splash-content { position: relative; z-index: 1; padding: 0 var(--pad) calc(36px + env(safe-area-inset-bottom)); color: var(--cream-text); }
   .splash-eyebrow {
@@ -637,7 +639,7 @@
 <div class="splash" id="splash">
   <img src="hero-bacharach.jpg" alt="Bacharach, Rhine Gorge">
   <div class="splash-gradient"></div>
-  <img class="splash-watermark" src="emblem.png" alt="">
+  <img class="splash-watermark" src="emblem-stamp.png" alt="">
   <div class="splash-lang">
     <span class="splash-lang-btn" data-lang="en">EN</span>
     <span class="splash-lang-btn" data-lang="ru">RU</span>
