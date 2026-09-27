@@ -61,7 +61,13 @@
     padding: 14px var(--pad) 10px; border-bottom: 1px solid var(--gold);
   }
 
-  .app-name { font-size: clamp(16px, 4vw, 19px); font-weight: 600; margin: 0; }
+  .app-name-row { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1 1 auto; }
+  .app-emblem { width: 26px; height: 26px; flex: 0 0 auto; object-fit: contain; }
+  .app-name {
+    font-size: clamp(15px, 4vw, 19px); font-weight: 600; margin: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+  }
+  .header-controls { flex: 0 0 auto; }
   .header-controls { display: flex; align-items: center; gap: 6px; font-family: var(--sans); }
 
   .pill-btn {
@@ -193,7 +199,7 @@
   .more-menu {
     position: fixed; left: 16px; right: 16px; top: 50%; transform: translateY(-50%) scale(0.96);
     z-index: 1400; background: var(--parchment); border: 8px solid var(--gold);
-    border-image: url('img/frame-vignette.jpg') 130 fill stretch;
+    border-image: url('img/frame-vignette.png') 130 fill stretch;
     border-image-width: 26px;
     box-shadow: 0 14px 36px rgba(20,14,6,0.45);
     padding: 22px 20px calc(18px + env(safe-area-inset-bottom)); font-family: var(--sans);
@@ -395,7 +401,7 @@
      по всем четырём сторонам, а не «шторка» снизу. */
   .premium-popup-card {
     background: var(--parchment); border: 8px solid var(--gold);
-    border-image: url('img/frame-vignette.jpg') 130 fill stretch;
+    border-image: url('img/frame-vignette.png') 130 fill stretch;
     border-image-width: 26px;
     padding: 22px 20px calc(18px + env(safe-area-inset-bottom));
     max-width: 420px; width: calc(100% - 32px); font-family: var(--sans);
@@ -544,7 +550,7 @@
     position: fixed; left: 16px; right: 16px; top: 50%; transform: translateY(-50%) scale(0.96);
     z-index: 1400;
     background: var(--parchment); border: 8px solid var(--gold);
-    border-image: url('img/frame-vignette.jpg') 130 fill stretch;
+    border-image: url('img/frame-vignette.png') 130 fill stretch;
     border-image-width: 26px;
     box-shadow: 0 14px 36px rgba(20,14,6,0.45);
     padding: 22px 20px calc(18px + env(safe-area-inset-bottom));
@@ -667,7 +673,10 @@
 
 <div class="app">
   <div class="header">
-    <p class="app-name">Rhine Guide</p>
+    <div class="app-name-row">
+      <img class="app-emblem" src="img/emblem.png" alt="">
+      <p class="app-name">Rhine Guide</p>
+    </div>
     <div class="header-controls">
       <span class="pill-btn active" data-lang="en">EN</span>
       <span class="pill-btn" data-lang="ru">RU</span>
