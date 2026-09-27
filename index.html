@@ -196,11 +196,22 @@
   }
   .more-menu-backdrop.show { display: block; }
   .more-menu-backdrop.visible { opacity: 1; }
+  /* Уголки-виньетки — один файл (угол + две линии почти во всю длину
+     холста), остальные три угла получаются отражением через CSS. Каждая
+     копия растянута на весь попап, поэтому линии доходят до противоположных
+     краёв, а отражения совмещаются в линию по каждой стороне. */
+  .vignette-corner {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: fill; pointer-events: none; z-index: -1;
+  }
+  .vignette-corner.tl { transform: scale(-1, -1); }
+  .vignette-corner.tr { transform: scaleY(-1); }
+  .vignette-corner.bl { transform: scaleX(-1); }
+  .vignette-corner.br { }
+
   .more-menu {
     position: fixed; left: 16px; right: 16px; top: 50%; transform: translateY(-50%) scale(0.96);
-    z-index: 1400; background: var(--parchment); border: 8px solid var(--gold);
-    border-image: url('img/frame-vignette.png') 130 fill stretch;
-    border-image-width: 26px;
+    z-index: 1400; background: var(--parchment); border: 1px solid var(--gold);
     box-shadow: 0 14px 36px rgba(20,14,6,0.45);
     padding: 22px 20px calc(18px + env(safe-area-inset-bottom)); font-family: var(--sans);
     max-width: 420px; margin: 0 auto; box-sizing: border-box;
@@ -400,13 +411,11 @@
      Экскурсии/Контакты/Обо мне) — центрированная карточка с виньеткой
      по всем четырём сторонам, а не «шторка» снизу. */
   .premium-popup-card {
-    background: var(--parchment); border: 8px solid var(--gold);
-    border-image: url('img/frame-vignette.png') 130 fill stretch;
-    border-image-width: 26px;
+    background: var(--parchment); border: 1px solid var(--gold);
     padding: 22px 20px calc(18px + env(safe-area-inset-bottom));
     max-width: 420px; width: calc(100% - 32px); font-family: var(--sans);
     max-height: 78vh; overflow-y: auto; box-sizing: border-box;
-    text-align: center;
+    text-align: center; position: relative; z-index: 0;
   }
   .premium-popup-card h4 {
     margin: 0 0 10px; color: var(--terracotta); font-family: 'EB Garamond', serif;
@@ -549,9 +558,7 @@
   .help-bubble {
     position: fixed; left: 16px; right: 16px; top: 50%; transform: translateY(-50%) scale(0.96);
     z-index: 1400;
-    background: var(--parchment); border: 8px solid var(--gold);
-    border-image: url('img/frame-vignette.png') 130 fill stretch;
-    border-image-width: 26px;
+    background: var(--parchment); border: 1px solid var(--gold);
     box-shadow: 0 14px 36px rgba(20,14,6,0.45);
     padding: 22px 20px calc(18px + env(safe-area-inset-bottom));
     max-width: 420px; margin: 0 auto; box-sizing: border-box;
@@ -621,6 +628,10 @@
 
 <div class="premium-popup" id="premiumPopup">
   <div class="premium-popup-card">
+    <img class="vignette-corner tl" src="border_image_eck.png" alt="">
+    <img class="vignette-corner tr" src="border_image_eck.png" alt="">
+    <img class="vignette-corner bl" src="border_image_eck.png" alt="">
+    <img class="vignette-corner br" src="border_image_eck.png" alt="">
     <h4 id="premiumPopupTitle">Another View</h4>
     <p id="premiumPopupText">An artistic, painterly view of this place is available in the extended guide. Message the guide for an access code to unlock it.</p>
 
@@ -652,6 +663,10 @@
 <!-- ВСПЛЫВАЮЩЕЕ ОКНО: содержимое пунктов «Экскурсии» / «Контакты» / «Обо мне» -->
 <div class="more-menu-backdrop" id="moreMenuBackdrop"></div>
 <div class="more-menu" id="moreMenu">
+  <img class="vignette-corner tl" src="border_image_eck.png" alt="">
+  <img class="vignette-corner tr" src="border_image_eck.png" alt="">
+  <img class="vignette-corner bl" src="border_image_eck.png" alt="">
+  <img class="vignette-corner br" src="border_image_eck.png" alt="">
   <button class="more-menu-close" id="moreMenuClose">✕</button>
   <div class="more-menu-title" id="moreMenuTitle">Title</div>
   <div class="more-menu-body" id="moreMenuBody"></div>
@@ -660,6 +675,10 @@
 <!-- ПОМОЩНИК-ПОДСКАЗКА: появляется при признаках "потерянности" (частые метания между вкладками) -->
 <div class="help-bubble-backdrop" id="helpBubbleBackdrop"></div>
 <div class="help-bubble" id="helpBubble">
+  <img class="vignette-corner tl" src="border_image_eck.png" alt="">
+  <img class="vignette-corner tr" src="border_image_eck.png" alt="">
+  <img class="vignette-corner bl" src="border_image_eck.png" alt="">
+  <img class="vignette-corner br" src="border_image_eck.png" alt="">
   <button class="more-menu-close" id="helpBubbleClose">✕</button>
   <div class="help-bubble-row">
     <span class="help-bubble-icon" id="helpBubbleIcon">🧭</span>
@@ -674,7 +693,7 @@
 <div class="app">
   <div class="header">
     <div class="app-name-row">
-      <img class="app-emblem" src="img/emblem.png" alt="">
+      <img class="app-emblem" src="emblem.png" alt="">
       <p class="app-name">Rhine Guide</p>
     </div>
     <div class="header-controls">
@@ -850,7 +869,7 @@
 const castles = [
   {
     id: "koblenz_altstadt", lat: 50.3600, lng: 7.5978,
-    images: ["koblenz_altstadt.jpg", "koblenz_altstadt_2.jpg", "koblenz_altstadt_4.jpg"],
+    images: ["KO_2screen.png", "koblenz_altstadt.jpg", "koblenz_altstadt_2.jpg", "koblenz_altstadt_4.jpg"],
     premiumImage: true, premiumLink: "",
     name: "Koblenz Old Town & Deutsches Eck", town: "Koblenz", pop: "~114,000",
     built: "Roman origins / Deutsches Eck 1897", builtRu: "Римское основание / Дойчес-Экк 1897",
