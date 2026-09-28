@@ -357,8 +357,8 @@
      фото, тёмные линии проступают как настоящий оттиск штампа. */
   .splash img.splash-watermark {
     position: absolute; z-index: 0; pointer-events: none;
-    inset: auto; top: calc(14px + env(safe-area-inset-top)); left: var(--pad); bottom: auto; right: auto;
-    width: 96px; height: 96px;
+    inset: auto; top: env(safe-area-inset-top); left: 0; bottom: auto; right: auto;
+    width: 110px; height: 110px;
     object-fit: contain; opacity: 0.4;
     mix-blend-mode: multiply;
   }
