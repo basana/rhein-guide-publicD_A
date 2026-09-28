@@ -143,6 +143,10 @@
   .photo img {
     width: 100%; height: 100%; object-fit: cover; display: block;
   }
+  /* Для картинок с готовой рамкой по краям — показываем целиком, без
+     обрезки (см. isDecorative в updateActivePhoto). */
+  .photo.photo-contain { background: var(--parchment); }
+  .photo.photo-contain img { object-fit: contain; }
 
   .badge {
     position: absolute; top: 10px; left: 10px;
@@ -353,9 +357,9 @@
      фото, тёмные линии проступают как настоящий оттиск штампа. */
   .splash img.splash-watermark {
     position: absolute; z-index: 0; pointer-events: none;
-    inset: auto; top: calc(14px + env(safe-area-inset-top)); left: var(--pad); bottom: auto; right: auto;
-    width: 170px; height: 170px;
-    object-fit: contain; opacity: 0.5;
+    inset: auto; top: env(safe-area-inset-top); left: 0; bottom: auto; right: auto;
+    width: 90px; height: 90px;
+    object-fit: contain; opacity: 0.4;
     mix-blend-mode: multiply;
   }
   .splash-content { position: relative; z-index: 1; padding: 0 var(--pad) calc(36px + env(safe-area-inset-bottom)); color: var(--cream-text); }
@@ -477,7 +481,7 @@
     background: linear-gradient(135deg, var(--terracotta), #8f4a22); color: #fff;
     font-weight: 700; font-size: 15px; cursor: pointer; font-family: var(--sans);
   }
-  .premium-ask-hint { text-align: center; margin-top: 12px; font-size: 12px; color: var(--ink-soft); }
+  .premium-ask-hint { display: block; text-align: center; margin-top: 12px; font-size: 12px; color: var(--ink-soft); text-decoration: underline; text-underline-offset: 2px; }
 
   /* === ИКОНКА ЗАМКА НА КАРТЕ: терракотовый круг + белый силуэт === */
   .castle-marker {
@@ -675,7 +679,7 @@
         </div>
         <p class="premium-code-error" id="premiumCodeError"></p>
         <button class="premium-unlock-btn" id="premiumUnlockBtn">Unlock</button>
-        <div class="premium-ask-hint" id="premiumAskHint">No code? Ask your guide.</div>
+        <a class="premium-ask-hint" id="premiumAskHint" href="https://wa.me/491772850207" target="_blank" rel="noopener">No code? Ask your guide.</a>
       </div>
 
       <div id="premiumUnlockedBlock" style="display:none;">
@@ -1945,7 +1949,14 @@ function updateActivePhoto() {
   const dotsEl = document.getElementById('photoDots');
   
   if (imgEl && castlePhotos.length > 0) {
-    imgEl.src = castlePhotos[currentPhotoIdx];
+    const src = castlePhotos[currentPhotoIdx];
+    imgEl.src = src;
+    // Декоративные "открыточные" картинки (с готовой рамкой по краям, как
+    // KO_2screen.png) не должны обрезаться по бокам — для них показываем
+    // целиком (contain), а не заполняем рамку кадра с обрезкой (cover),
+    // как для обычных фото.
+    const isDecorative = /KO_2scre.n\.png$/i.test(src);
+    imgEl.closest('.photo').classList.toggle('photo-contain', isDecorative);
   }
 
   if (dotsEl) {
