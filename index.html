@@ -245,6 +245,9 @@
   }
 
   .stats { display: flex; gap: 12px; margin-bottom: 18px; font-family: var(--sans); }
+  /* Оптический разделитель между плитками-указателями (только на входном
+     экране) и информацией о месте под ними — добавляется классом ниже. */
+  .stats.after-quicklinks { padding-top: 16px; border-top: 1px solid rgba(201,160,92,0.5); }
   .stat { flex: 1; background: var(--parchment-deep); border: 1px solid var(--gold); border-radius: 10px; padding: 10px; text-align: center; }
   .stat p:first-child { margin: 0 0 3px; font-size: 11px; color: var(--ink-soft); }
   .stat p:last-child { margin: 0; font-size: calc(15px * var(--scale)); font-weight: 600; color: var(--terracotta); }
@@ -1759,6 +1762,8 @@ function renderQuickLinksText() {
   // локациях до всех разделов и так уже можно дойти через обычное меню.
   const quickLinks = document.getElementById('quickLinks');
   if (quickLinks) quickLinks.style.display = (index === 0) ? 'grid' : 'none';
+  const statsBox = document.querySelector('.stats');
+  if (statsBox) statsBox.classList.toggle('after-quicklinks', index === 0);
 
   const setLbl = (id, text) => {
     const el = document.getElementById(id);
@@ -1854,16 +1859,6 @@ function renderGuide() {
   document.getElementById('stationDesc').textContent = lang === 'ru' ? (s.sayRu || s.factsRu) : (s.say || s.facts);
   renderQuickLinksText();
 
-  // Самая первая точка (index 0) — это входной экран приложения: тут не
-  // нужна карточка конкретного места (город/построен/факты/легенды/плеер),
-  // только фото и указатели на разделы (quickLinks) сразу под ним.
-  const isEntryPoint = index === 0;
-  const statsBox = document.querySelector('.stats');
-  const storyBox = document.querySelector('.story-block');
-  const actionsBox = document.querySelector('.actions');
-  if (statsBox) statsBox.style.display = isEntryPoint ? 'none' : 'flex';
-  if (storyBox) storyBox.style.display = isEntryPoint ? 'none' : 'block';
-  if (actionsBox) actionsBox.style.display = isEntryPoint ? 'none' : 'flex';
 
   document.getElementById('statTownLabel').textContent = t.town;
   document.getElementById('statTown').textContent = s.town;
@@ -1873,7 +1868,7 @@ function renderGuide() {
   const tourBadge = document.getElementById('tourBadge');
   const tourNote = lang === 'ru' ? s.tourNoteRu : s.tourNote;
   if (tourBadge) {
-    if (tourNote && !isEntryPoint) {
+    if (tourNote) {
       tourBadge.style.display = 'inline-flex';
       document.getElementById('tourBadgeText').textContent = tourNote;
     } else {
@@ -1886,7 +1881,7 @@ function renderGuide() {
 
   const legendBox = document.getElementById('legendContainer');
   const legendTxt = lang === 'ru' ? s.legendRu : s.legend;
-  if (legendTxt && !isEntryPoint) {
+  if (legendTxt) {
     legendBox.style.display = 'block';
     document.getElementById('legendTitle').textContent = t.legend;
     setSplitText('stationLegendA', 'stationLegendB', legendTxt);
