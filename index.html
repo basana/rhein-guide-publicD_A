@@ -297,7 +297,8 @@
   .map-panel {
     position: absolute; z-index: 1000; left: 12px; right: 12px; bottom: 16px;
     background: var(--parchment-deep); border: 1.5px solid var(--gold); border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(90, 67, 39, 0.35); padding: 14px;
+    box-shadow: 0 10px 30px rgba(90, 67, 39, 0.35); padding: 16px 16px 14px;
+    min-height: 150px; box-sizing: border-box;
     display: none; font-family: var(--sans);
   }
   .map-panel.open { display: block; }
@@ -309,7 +310,7 @@
     background: var(--parchment); color: var(--ink); font-size: 1rem; cursor: pointer;
     display: flex; align-items: center; justify-content: center; flex: 0 0 28px;
   }
-  .map-panel-desc { font-size: 0.9rem; line-height: 1.5; color: var(--ink); margin-bottom: 12px; font-family: 'EB Garamond', serif; }
+  .map-panel-desc { font-size: 0.9rem; line-height: 1.5; color: var(--ink); margin-bottom: 12px; font-family: 'EB Garamond', serif; max-width: 34ch; }
   .map-panel-actions { display: flex; gap: 8px; }
   .map-panel-speak {
     flex: 1; min-height: 40px; border-radius: 9px; border: none;
@@ -1853,6 +1854,17 @@ function renderGuide() {
   document.getElementById('stationDesc').textContent = lang === 'ru' ? (s.sayRu || s.factsRu) : (s.say || s.facts);
   renderQuickLinksText();
 
+  // Самая первая точка (index 0) — это входной экран приложения: тут не
+  // нужна карточка конкретного места (город/построен/факты/легенды/плеер),
+  // только фото и указатели на разделы (quickLinks) сразу под ним.
+  const isEntryPoint = index === 0;
+  const statsBox = document.querySelector('.stats');
+  const storyBox = document.querySelector('.story-block');
+  const actionsBox = document.querySelector('.actions');
+  if (statsBox) statsBox.style.display = isEntryPoint ? 'none' : 'flex';
+  if (storyBox) storyBox.style.display = isEntryPoint ? 'none' : 'block';
+  if (actionsBox) actionsBox.style.display = isEntryPoint ? 'none' : 'flex';
+
   document.getElementById('statTownLabel').textContent = t.town;
   document.getElementById('statTown').textContent = s.town;
   document.getElementById('statBuiltLabel').textContent = t.built;
@@ -1861,7 +1873,7 @@ function renderGuide() {
   const tourBadge = document.getElementById('tourBadge');
   const tourNote = lang === 'ru' ? s.tourNoteRu : s.tourNote;
   if (tourBadge) {
-    if (tourNote) {
+    if (tourNote && !isEntryPoint) {
       tourBadge.style.display = 'inline-flex';
       document.getElementById('tourBadgeText').textContent = tourNote;
     } else {
@@ -1874,7 +1886,7 @@ function renderGuide() {
 
   const legendBox = document.getElementById('legendContainer');
   const legendTxt = lang === 'ru' ? s.legendRu : s.legend;
-  if (legendTxt) {
+  if (legendTxt && !isEntryPoint) {
     legendBox.style.display = 'block';
     document.getElementById('legendTitle').textContent = t.legend;
     setSplitText('stationLegendA', 'stationLegendB', legendTxt);
@@ -2107,6 +2119,8 @@ function renderInfo() {
   if (routeBtn) routeBtn.onclick = () => switchView('route');
 }
 
+const TOWN_IDS = new Set(['koblenz_altstadt', 'braubach', 'boppard', 'bacharach', 'ruedesheim']);
+
 function initMap() {
   if (leafletMap) {
     setTimeout(() => leafletMap.invalidateSize(), 50);
@@ -2115,9 +2129,8 @@ function initMap() {
 
   leafletMap = L.map('mapDiv', { scrollWheelZoom: true }).setView([50.18, 7.75], 10);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(leafletMap);
-  
+
   const points = [];
-  const TOWN_IDS = new Set(['koblenz_altstadt', 'braubach', 'boppard', 'bacharach', 'ruedesheim']);
   const MAP_OFFSETS = {
     marksburg: [0.0035, 0.0030],
     ehrenbreitstein: [0.0045, 0.0035],
@@ -2205,7 +2218,13 @@ function showMapPanel(i) {
   if (!panel) return;
 
   document.getElementById('mapPanelTitle').textContent = c.name;
-  document.getElementById('mapPanelMeta').textContent = `${c.town}${c.pop && c.pop !== '—' ? ' · ' + c.pop : ''} • ${lang === 'ru' ? c.builtRu : c.built}`;
+  // Население — не главное; на первом месте дата постройки (для замка) или
+  // дата/факт основания (для города), город/место — вторым, если есть место.
+  const builtText = lang === 'ru' ? c.builtRu : c.built;
+  const isTown = TOWN_IDS.has(c.id);
+  document.getElementById('mapPanelMeta').textContent = isTown
+    ? `${c.town} • ${builtText}`
+    : `${builtText} • ${c.town}`;
   
   const shortText = lang === 'ru' ? (c.sayRu || c.factsRu) : (c.say || c.facts);
   document.getElementById('mapPanelDesc').textContent = shortText;
