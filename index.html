@@ -358,11 +358,31 @@
   /* Водяной знак-штамп на сплэше — та же картинка emblem-stamp.png, что и
      внутри сайта (см. .app::before). У файла белый (непрозрачный) фон,
      поэтому наложение через mix-blend-mode: multiply — белое сливается с
-     фото, тёмные линии проступают как настоящий оттиск штампа. */
-  .splash img.splash-watermark {
+     фото, тёмные линии проступают как настоящий оттиск штампа.
+     Обёртка обрезает и эмблему, и лучи снизу — получается эффект «солнца»,
+     встающего из-за горы на фото, а не полный кружок. */
+  .splash-watermark-wrap {
     position: absolute; z-index: 0; pointer-events: none;
-    inset: auto; top: env(safe-area-inset-top); left: 0; bottom: auto; right: auto;
+    top: env(safe-area-inset-top); left: 0;
     width: 127px; height: 127px;
+    clip-path: inset(0 0 42% 0);
+    overflow: hidden;
+  }
+  .splash-rays {
+    position: absolute; z-index: 0;
+    top: 50%; left: 50%; width: 240px; height: 240px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: repeating-conic-gradient(
+      rgba(255, 224, 160, 0.65) 0deg 3deg,
+      transparent 3deg 18deg
+    );
+    opacity: 0.7;
+    mix-blend-mode: soft-light;
+  }
+  .splash img.splash-watermark {
+    position: absolute; z-index: 1; pointer-events: none;
+    inset: 0; width: 100%; height: 100%;
     object-fit: contain; opacity: 0.6;
     mix-blend-mode: multiply;
   }
@@ -647,7 +667,10 @@
 <div class="splash" id="splash">
   <img src="hero-bacharach.jpg" alt="Bacharach, Rhine Gorge">
   <div class="splash-gradient"></div>
-  <img class="splash-watermark" src="emblem-stamp.png" alt="">
+  <div class="splash-watermark-wrap">
+    <div class="splash-rays"></div>
+    <img class="splash-watermark" src="emblem-stamp.png" alt="">
+  </div>
   <div class="splash-lang">
     <span class="splash-lang-btn" data-lang="en">EN</span>
     <span class="splash-lang-btn" data-lang="ru">RU</span>
