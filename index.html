@@ -391,11 +391,12 @@
   }
   .splash-content { position: relative; z-index: 1; padding: 0 var(--pad) calc(36px + env(safe-area-inset-bottom)); color: var(--cream-text); }
   .splash-eyebrow {
-    font-family: var(--sans); font-size: 13.75px; letter-spacing: 0.19em; text-transform: uppercase;
+    font-family: var(--sans); font-size: 12.4px; letter-spacing: 0.19em; text-transform: uppercase;
     color: var(--cream-text); font-weight: 700; opacity: 0.86;
     margin: 0 0 6px;
     text-shadow: 0 2px 10px rgba(0,0,0,0.65), 0 1px 3px rgba(0,0,0,0.8);
     display: block;
+    transform: translateY(-5%);
   }
   .splash-title {
     font-family: 'EB Garamond', serif; font-weight: 600;
@@ -1002,7 +1003,7 @@ const castles = [
     facts: "A picturesque medieval wine town lying directly at the foot of Marksburg. It features well-preserved half-timbered houses, ancient town gates, and a rich history of mining and winemaking.",
     factsRu: "Живописный средневековый винный городок у подножия Марксбурга. Сохранил фахверковые дома, старинные городские ворота и традиции виноделия.",
     legend: "Braubach offers a pristine glimpse into the life of a medieval Rhine settlement protected by its towering fortress.",
-    legendRu: "Браубах дает подлинное представление о жизни средневекового рейнского поселения под защитой грозной крепости.",
+    legendRu: "Браубах даёт подлинное представление о жизни средневекового рейнского поселения под защитой грозной крепости.",
     say: "A charming half-timbered town nestled beneath the mighty Marksburg.",
     sayRu: "Очаровательный фахверковый городок у подножия могучего Марксбурга."
   },
@@ -1240,9 +1241,9 @@ const routePlaces = [
     title: "Lahnstein — where the Lahn joins the Rhine", titleRu: "Ланштайн — где Лан впадает в Рейн",
     place: "Lahnstein / Lahneck",
     text: "Lahneck stands above the mouth of the Lahn, opposite Stolzenfels. The location explains the castle's importance: the junction of two waterways was an ideal place to control movement and river traffic.",
-    textRu: "Лянек стоит над устьем реки Лан, напротив Штольценфельса. Расположение объясняет важность замка: место слияния двух рек было идеальным для контроля над движением и речным трафиком.",
+    textRu: "Ланек стоит над устьем реки Лан, напротив Штольценфелса. Расположение объясняет важность замка: место слияния двух рек было идеальным для контроля над движением и речным трафиком.",
     extra: "Local tradition also connects Lahneck with fleeing Knights Templar, although that story is not historically confirmed. It works best as a clearly labelled legend rather than as established history.",
-    extraRu: "Местная традиция также связывает Лянек с бежавшими рыцарями-тамплиерами, хотя эта история исторически не подтверждена. Лучше преподносить её именно как легенду, а не как установленный факт.",
+    extraRu: "Местная традиция также связывает Ланек с бежавшими рыцарями-тамплиерами, хотя эта история исторически не подтверждена. Лучше преподносить её именно как легенду, а не как установленный факт.",
     hook: "Here the geography itself explains the castle: two rivers meet, and whoever controlled the height could watch the traffic.",
     hookRu: "Здесь сама география объясняет замок: две реки встречаются, и тот, кто контролировал высоту, следил за движением."
   },
@@ -1253,7 +1254,7 @@ const routePlaces = [
     text: "A little further up the river Lahn, the small town of Villmar sits on something special: colorful 'Lahn Marble.' It isn't true marble — it's a polishable limestone. It formed about 380 million years ago from coral reefs in a warm, shallow sea that once covered this part of Germany.",
     textRu: "Чуть выше по реке Лан стоит маленький городок Фильмар, а под ним — кое-что особенное: цветной «ланский мрамор». На самом деле это не настоящий мрамор, а известняк, который хорошо полируется. Он образовался около 380 миллионов лет назад из коралловых рифов в тёплом мелком море, которое когда-то покрывало эту часть Германии.",
     extra: "Because it shines so beautifully when polished, this stone traveled far from the Lahn valley. It was used in churches and palaces across Germany, and even further: in the entrance hall of the Empire State Building in New York, and in the Hermitage in St. Petersburg.",
-    extraRu: "Этот камень так красиво блестит после полировки, что уехал далеко за пределы долины Лана. Его использовали в церквях и дворцах по всей Германии, и даже дальше: в вестибюле Эмпайр-стейт-билдинг в Нью-Йорке и в Эрмитаже в Санкт-Петербурге.",
+    extraRu: "Этот камень так красиво блестит после полировки, что уехал далеко за пределы долины Лана. Его использовали в церквях и дворцах по всей Германии, и даже дальше: в вестибюле Эмпайр-стейт-билдинга в Нью-Йорке и в Эрмитаже в Санкт-Петербурге.",
     hook: "A small town on a small river — and a piece of it is standing in the lobby of one of the world's most famous skyscrapers.",
     hookRu: "Маленький город на маленькой реке — а кусочек его стоит в вестибюле одного из самых знаменитых небоскрёбов мира."
   },
