@@ -359,18 +359,19 @@
      внутри сайта (см. .app::before). У файла белый (непрозрачный) фон,
      поэтому наложение через mix-blend-mode: multiply — белое сливается с
      фото, тёмные линии проступают как настоящий оттиск штампа.
-     Обёртка обрезает и эмблему, и лучи снизу — получается эффект «солнца»,
-     встающего из-за горы на фото, а не полный кружок. */
+     Эмблема теперь показывается целиком (обрезка снизу убрана — новый
+     вариант эмблемы использует весь круг, обрезка прятала часть рисунка).
+     Лучи — отдельный слой того же размера, что и эмблема, с маской:
+     видны только СНАРУЖИ круга эмблемы (маска скрывает середину), поэтому
+     не пересекают сам рисунок. */
   .splash-watermark-wrap {
     position: absolute; z-index: 0; pointer-events: none;
     top: env(safe-area-inset-top); left: 0;
     width: 127px; height: 127px;
-    clip-path: inset(0 0 42% 0);
-    overflow: hidden;
   }
   .splash-rays {
     position: absolute; z-index: 0;
-    top: 50%; left: 50%; width: 240px; height: 240px;
+    top: 50%; left: 50%; width: 210px; height: 210px;
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: repeating-conic-gradient(
@@ -379,6 +380,8 @@
     );
     opacity: 0.7;
     mix-blend-mode: soft-light;
+    -webkit-mask-image: radial-gradient(circle, transparent 0 64px, black 68px, black 100%);
+    mask-image: radial-gradient(circle, transparent 0 64px, black 68px, black 100%);
   }
   .splash img.splash-watermark {
     position: absolute; z-index: 1; pointer-events: none;
@@ -1435,6 +1438,9 @@ const UI = {
     premiumUnlockedFallback: 'Artwork for this location is on its way — check back soon.',
     premiumTitleGps: 'GPS Auto-Locate',
     premiumTextGps: 'Let the app sense where you are and open the right station automatically — no scrolling or searching. Available in the bonus edition.',
+    premiumTitleRoute: 'Continue Reading',
+    premiumTextRoute: 'The full route guide — every stop, story and legend along the way — is available in the bonus edition.',
+    routeReadMore: 'Continue reading →',
     gpsToggle: 'GPS', gpsOn: 'GPS ON',
     gpsLocating: 'Locating…',
     gpsError: 'Could not get your location. Check location permissions.',
@@ -1476,6 +1482,9 @@ const UI = {
     premiumUnlockedFallback: 'Картина для этого места скоро появится — загляните позже.',
     premiumTitleGps: 'GPS-автоопределение',
     premiumTextGps: 'Пусть приложение само определит, где вы находитесь, и откроет нужную станцию — без пролистывания и поиска. Доступно в бонусной версии.',
+    premiumTitleRoute: 'Читать дальше',
+    premiumTextRoute: 'Полный путеводитель по маршруту — все остановки, истории и легенды — доступен в бонусной версии.',
+    routeReadMore: 'Читать дальше →',
     gpsToggle: 'GPS', gpsOn: 'GPS ВКЛ',
     gpsLocating: 'Определяем…',
     gpsError: 'Не удалось определить местоположение. Проверьте разрешения геолокации.',
@@ -2062,6 +2071,7 @@ function renderLegendsList() {
 
 function renderRouteList() {
   const el = document.getElementById('view-route');
+  const t = UI[lang];
   el.innerHTML = routePlaces.map((r, i) => `
     <div class="route-card">
       <div class="route-kicker">${String(i+1).padStart(2,'0')}</div>
@@ -2071,7 +2081,11 @@ function renderRouteList() {
       <p style="margin:6px 0; color:var(--ink-soft);">${lang === 'ru' ? r.extraRu : r.extra}</p>
       <div class="route-hook">${lang === 'ru' ? r.hookRu : r.hook}</div>
     </div>
-  `).join('');
+  `).join('') + `
+    <button class="route-open-btn" id="routeReadMoreBtn" style="display:block; width:100%; margin:4px 0 18px; padding:10px 14px; border-radius:8px; border:1px solid var(--gold); background:transparent; color:var(--terracotta); font-family:var(--sans); font-size:0.9rem; font-weight:600; cursor:pointer;">${t.routeReadMore}</button>
+  `;
+  const readMoreBtn = document.getElementById('routeReadMoreBtn');
+  if (readMoreBtn) readMoreBtn.onclick = () => openPremiumPopup('route');
 }
 
 function renderInfo() {
@@ -2127,10 +2141,6 @@ function renderInfo() {
     <div class="info-card">
       <div class="castle-name">${ru ? 'Паромы — повседневная зависимость' : 'Ferries — everyday dependency'}</div>
       <p style="margin:6px 0 0; line-height:1.5;">${ru ? 'На этом участке через Рейн нет ни одного моста. Оба берега соединяют небольшие автомобильные паромы. При очень высокой или очень низкой воде паромы перестают ходить — и тогда жителям, которые живут на одном берегу, а работают или учатся на другом, приходится делать большой крюк, иногда на час и больше, пока уровень воды не позволит парому снова ходить.' : 'There is no bridge across the Rhine anywhere in this stretch. Small car ferries connect the two banks. In very high water or very low water, ferries stop running — commuters and schoolchildren living on one side and working or studying on the other then face large detours, sometimes an hour or more, until the water level allows the ferry back.'}</p>
-    </div>
-    <div class="info-card">
-      <div class="castle-name">${ru ? 'Предлагаемый порядок рассказа' : 'Suggested narration order'}</div>
-      <p style="margin:6px 0 0; line-height:1.5;">${ru ? 'Выезжая из Кобленца: вступление про ЮНЕСКО и плотность замков → Штольценфельс/Ланек: схема «разрушение и восстановление» → Марксбург: исключение из правила → изгиб у Boppard: тихий живописный момент → близнецы St. Goar: история про пошлину и соперничество → Лорелей: легенда, а потом — поворот 1801 года → кластер Райнштайн/Райхенштайн/Зонек → паромы: история из повседневной жизни → Пфальцграфенштайн: визуальная кульминация → Бахарах/Мойзетурм/Рюдесхайм: финал маршрута.' : 'Leaving Koblenz: intro UNESCO + castle density → Stolzenfels/Lahneck: the destroy-and-rebuild pattern → Marksburg: the exception → Boppard bend: quiet scenic moment → St. Goar twins: toll/rivalry story → Loreley: legend, then the 1801 twist → Rheinstein/Reichenstein/Sooneck cluster → ferries: everyday-life story → Pfalzgrafenstein: visual punchline → Bacharach/Mäuseturm/Rüdesheim: arrival.'}</p>
     </div>
   `;
   const routeBtn = document.getElementById('openRouteFromInfo');
@@ -2387,6 +2397,10 @@ function openPremiumPopup(kind) {
     if (pTitle) pTitle.textContent = t.premiumTitleGps;
     if (pText) pText.textContent = t.premiumTextGps;
     if (pTeaser) pTeaser.style.display = 'none';
+  } else if (kind === 'route') {
+    if (pTitle) pTitle.textContent = t.premiumTitleRoute;
+    if (pText) pText.textContent = t.premiumTextRoute;
+    if (pTeaser) pTeaser.style.display = 'none';
   } else {
     if (pTitle) pTitle.textContent = t.premiumTitle;
     if (pText) pText.textContent = t.premiumText;
@@ -2439,6 +2453,8 @@ if (premiumUnlockBtn) {
       if (premiumPopupKind === 'gps') {
         premiumPopupEl.classList.remove('open');
         toggleGps();
+      } else if (premiumPopupKind === 'route') {
+        premiumPopupEl.classList.remove('open');
       } else {
         showPremiumUnlockedView();
       }
