@@ -103,6 +103,11 @@
     justify-content: center;
     font-family: var(--sans);
     line-height: 1;
+    transition: opacity 0.15s;
+  }
+  .tab-arrow-hidden {
+    opacity: 0;
+    pointer-events: none;
   }
 
   .tabs {
@@ -1417,7 +1422,7 @@ const routePlaces = [
 
 const UI = {
   en: {
-    tabs: ['Guide', 'Locations', 'Map', 'Legends', 'Info', 'Route'],
+    tabs: ['Guide', 'Locations', 'Map', 'Legends', 'Info', 'Route', 'Contact'],
     stationLabel: (n, t) => `Location ${n} of ${t}`,
     built: 'Built', town: 'Town', play: 'Listen', check: 'Visited',
     story: 'Historical Facts', legend: 'Legend & Lore',
@@ -1461,7 +1466,7 @@ const UI = {
     qlTours: 'Tours', qlContact: 'Contact', qlAbout: 'About me'
   },
   ru: {
-    tabs: ['Гид', 'Точки', 'Карта', 'Легенды', 'Инфо', 'Маршрут'],
+    tabs: ['Гид', 'Точки', 'Карта', 'Легенды', 'Инфо', 'Маршрут', 'Контакты'],
     stationLabel: (n, t) => `Точка ${n} из ${t}`,
     built: 'Построен', town: 'Город', play: 'Слушать', check: 'Посещено',
     story: 'Исторические факты', legend: 'Легенды и предания',
@@ -1535,7 +1540,8 @@ const TAB_COLORS = {
   map: '#3a6ea5',     // синий — та же логика, что у GPS/карты в остальном приложении
   legends: '#7B4B8A', // приглушённый лиловый — легенды/предания
   info: '#4A6B4E',    // зелёный (--done)
-  route: '#A83232'    // кирпично-красный
+  route: '#A83232',   // кирпично-красный
+  about: '#2F7A78'    // тёмная бирюза — вкладка «Контакты», отдельный цвет от остальных
 };
 
 function renderTabs() {
@@ -1543,14 +1549,17 @@ function renderTabs() {
   tabsEl.innerHTML = '';
   UI[lang].tabs.forEach((label, i) => {
     const s = document.createElement('span');
-    const tabKeys = ['guide', 'castles', 'map', 'legends', 'info', 'route'];
+    const tabKeys = ['guide', 'castles', 'map', 'legends', 'info', 'route', 'about'];
     const key = tabKeys[i];
     s.className = 'tab' + (key === currentView ? ' active' : '');
     s.style.setProperty('--tab-color', TAB_COLORS[key] || 'var(--terracotta)');
     s.textContent = label;
-    s.onclick = () => switchView(key);
+    // «Контакты» — не отдельный экран, а всплывающее окно поверх текущего
+    // (доступно с любой станции), поэтому не меняет currentView.
+    s.onclick = (key === 'about') ? (() => openInfoPopup('guideInfo')) : (() => switchView(key));
     tabsEl.appendChild(s);
   });
+  updateTabArrows();
 }
 
 /* ФУНКЦИЯ ПРОКРУТКИ ТАБОВ СТРЕЛКАМИ */
@@ -1560,6 +1569,19 @@ function scrollTabs(distance) {
     behavior: 'smooth'
   });
 }
+
+// Прячет стрелку прокрутки вкладок, когда докручивать в её сторону уже
+// некуда — раньше стрелка оставалась активной и «вела в никуда».
+function updateTabArrows() {
+  const tabsEl = document.getElementById('tabs');
+  const arrows = document.querySelectorAll('.tab-arrow');
+  if (!tabsEl || arrows.length < 2) return;
+  const maxScroll = tabsEl.scrollWidth - tabsEl.clientWidth;
+  arrows[0].classList.toggle('tab-arrow-hidden', tabsEl.scrollLeft <= 1);
+  arrows[1].classList.toggle('tab-arrow-hidden', tabsEl.scrollLeft >= maxScroll - 1);
+}
+document.getElementById('tabs').addEventListener('scroll', updateTabArrows);
+window.addEventListener('resize', updateTabArrows);
 
 let currentView = 'guide';
 function switchView(viewName) {
@@ -1784,6 +1806,33 @@ const INFO_POPUPS = {
       title: 'Обо мне',
       body: `<p>Сертифицированный гид (BVGD), живу в Кобленце. Говорю по-русски, по-немецки и по-английски, работаю с туроператорами (Travmondo, Saga, Viking), а также с частными группами.</p>
         <p>Открытки из этого приложения тоже можно заказать — напишите через контакты.</p>`
+    }
+  },
+  // Объединённая карточка для вкладки «Контакты» — доступна с любого экрана
+  // (в отличие от указателей на входе, которые видны только на станции 0),
+  // поэтому собирает все три раздела (Контакты/Экскурсии/Обо мне) в одном месте.
+  guideInfo: {
+    en: {
+      title: 'Guide & contact',
+      body: `<p style="margin:0 0 4px; font-weight:700; color:var(--terracotta);">Contact & booking</p>
+        <p>Phone / WhatsApp: <a href="tel:+491772850207">+49 177 285 0207</a></p>
+        <p>Get in touch to check availability and book a tour.</p>
+        <p style="margin:18px 0 4px; font-weight:700; color:var(--terracotta);">Guided tours</p>
+        <p>As a certified guide (BVGD) I offer city walking tours, hikes in the vineyards and along the Rhine, themed excursions and travel companion services for groups — year-round around Koblenz and the Rhine Gorge.</p>
+        <p style="margin:18px 0 4px; font-weight:700; color:var(--terracotta);">About me</p>
+        <p>Certified tour guide (BVGD), based in Koblenz. I speak Russian, German and English, and work with tour operators (Travmondo, Saga, Viking) as well as private groups.</p>
+        <p>Postcards from this app are also available to order — just ask.</p>`
+    },
+    ru: {
+      title: 'Гид и контакты',
+      body: `<p style="margin:0 0 4px; font-weight:700; color:var(--terracotta);">Контакты и бронирование</p>
+        <p>Телефон / WhatsApp: <a href="tel:+491772850207">+49 177 285 0207</a></p>
+        <p>Напишите или позвоните, чтобы узнать о свободных датах и забронировать экскурсию.</p>
+        <p style="margin:18px 0 4px; font-weight:700; color:var(--terracotta);">Экскурсии</p>
+        <p>Как сертифицированный гид (BVGD) провожу пешеходные экскурсии по городу, походы по виноградникам и вдоль Рейна, тематические экскурсии и сопровождение групп в поездках — круглый год, в Кобленце и Рейнском ущелье.</p>
+        <p style="margin:18px 0 4px; font-weight:700; color:var(--terracotta);">Обо мне</p>
+        <p>Сертифицированный гид (BVGD), живу в Кобленце. Говорю по-русски, по-немецки и по-английски, работаю с туроператорами (Travmondo, Saga, Viking), а также с частными группами.</p>
+        <p>Открытки из этого приложения тоже можно заказать — просто напишите.</p>`
     }
   }
 };
