@@ -531,7 +531,7 @@
 
   /* === ЛЕГЕНДА КАРТЫ (справа сверху, не перекрывает маркеры) === */
   .map-legend {
-    position: absolute; z-index: 900; top: 12px; right: 12px;
+    position: absolute; z-index: 900; top: 60px; right: 12px;
     background: rgba(246, 238, 221, 0.95); border: 1px solid var(--gold); border-radius: 10px;
     padding: 8px 10px; font-family: var(--sans); font-size: 11px; color: var(--ink);
     box-shadow: 0 4px 14px rgba(90,67,39,0.25); max-width: 152px;
@@ -544,6 +544,26 @@
     border: 1.5px solid #fff; display: flex; align-items: center; justify-content: center;
   }
   .map-legend-icon img { width: 8px; height: 8px; filter: invert(1) brightness(2); }
+
+  /* === ПОИСК ГОРОДА/ЗАМКА НА КАРТЕ === */
+  .map-search-wrap {
+    position: absolute; z-index: 1000; top: 12px; left: 12px; right: 12px;
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(246, 238, 221, 0.95); border: 1px solid var(--gold); border-radius: 20px;
+    padding: 8px 12px; box-shadow: 0 4px 14px rgba(90,67,39,0.25); box-sizing: border-box;
+  }
+  .map-search-icon { font-size: 13px; flex: 0 0 auto; opacity: 0.75; }
+  .map-search-input {
+    flex: 1; min-width: 0; border: none; background: transparent; outline: none;
+    font-family: var(--sans); font-size: 13px; color: var(--ink);
+  }
+  .map-search-input::placeholder { color: var(--ink-soft); }
+  .map-search-clear {
+    flex: 0 0 auto; width: 20px; height: 20px; border-radius: 50%; border: none;
+    background: rgba(90,67,39,0.12); color: var(--ink-soft); font-size: 11px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; padding: 0;
+  }
+  .map-search-wrap.not-found { border-color: var(--terracotta); }
 
   /* === GPS-КНОПКА НА КАРТЕ (ПРЕМИУМ) === */
   .gps-toggle-btn {
@@ -861,6 +881,12 @@
     <!-- КАРТА -->
     <div class="view" id="view-map">
       <div id="mapDiv"></div>
+      <div class="map-search-wrap">
+        <span class="map-search-icon">🔎</span>
+        <input type="text" class="map-search-input" id="mapSearchInput" list="mapSearchList" autocomplete="off" autocapitalize="off" enterkeyhint="search">
+        <datalist id="mapSearchList"></datalist>
+        <button class="map-search-clear" id="mapSearchClear" style="display:none;">✕</button>
+      </div>
       <button class="gps-toggle-btn" id="gpsToggleBtn">
         <span class="lock-star">✦</span><span>📍</span><span id="gpsToggleLabel">GPS</span>
       </button>
@@ -1467,7 +1493,9 @@ const UI = {
     helpBubbleShow: 'Show the menu', helpBubbleDismiss: 'No, thanks',
     helpBubbleTextGps: 'Live GPS distance to the nearest castle is part of the bonus edition.',
     helpBubbleShowGps: 'Learn more',
-    qlTours: 'Tours', qlContact: 'Contact', qlAbout: 'About me'
+    qlTours: 'Tours', qlContact: 'Contact', qlAbout: 'About me',
+    mapSearchPlaceholder: 'Find a town or castle…',
+    mapSearchNotFound: 'Not found. Try another name.'
   },
   ru: {
     tabs: ['Гид', 'Точки', 'Карта', 'Легенды', 'Инфо', 'Маршрут', 'Контакты'],
@@ -1511,7 +1539,9 @@ const UI = {
     helpBubbleShow: 'Показать меню', helpBubbleDismiss: 'Нет, спасибо',
     helpBubbleTextGps: 'GPS и расстояние до ближайшего замка доступны в бонусной версии.',
     helpBubbleShowGps: 'Узнать больше',
-    qlTours: 'Экскурсии', qlContact: 'Контакты', qlAbout: 'Обо мне'
+    qlTours: 'Экскурсии', qlContact: 'Контакты', qlAbout: 'Обо мне',
+    mapSearchPlaceholder: 'Найти город или замок…',
+    mapSearchNotFound: 'Не найдено. Попробуйте другое название.'
   }
 };
 
@@ -2037,6 +2067,9 @@ function applyStaticText() {
   if (sTitle) sTitle.innerHTML = t.splashTitle;
   if (sTagline) sTagline.innerHTML = t.splashTagline;
   if (sEnter) sEnter.textContent = t.splashEnter;
+
+  const mapSearchEl = document.getElementById('mapSearchInput');
+  if (mapSearchEl) mapSearchEl.placeholder = t.mapSearchPlaceholder;
 }
 
 function updateActivePhoto() {
@@ -2331,6 +2364,83 @@ function showMapPanel(i) {
     }
   });
 }
+
+// === ПОИСК ГОРОДА/ЗАМКА НА КАРТЕ ===
+// Названия — собственные имена, одинаковые в обоих языках (нет отдельного
+// nameRu), поэтому список для подсказок строится один раз и не зависит от lang.
+function renderMapSearchOptions() {
+  const list = document.getElementById('mapSearchList');
+  if (!list) return;
+  const seen = new Set();
+  let html = '';
+  castles.forEach((c) => {
+    if (typeof c.lat !== 'number') return;
+    [c.name, c.town].forEach((v) => {
+      if (v && !seen.has(v)) {
+        seen.add(v);
+        html += `<option value="${v.replace(/"/g, '&quot;')}">`;
+      }
+    });
+  });
+  list.innerHTML = html;
+}
+
+function normalizeSearch(s) {
+  return (s || '').toLowerCase().trim();
+}
+
+function findCastleByQuery(query) {
+  const q = normalizeSearch(query);
+  if (!q) return -1;
+  // Сначала точное совпадение по названию/городу, затем — по вхождению подстроки.
+  let idx = castles.findIndex((c) => typeof c.lat === 'number' &&
+    (normalizeSearch(c.name) === q || normalizeSearch(c.town) === q));
+  if (idx >= 0) return idx;
+  idx = castles.findIndex((c) => typeof c.lat === 'number' &&
+    (normalizeSearch(c.name).includes(q) || normalizeSearch(c.town).includes(q)));
+  return idx;
+}
+
+function runMapSearch() {
+  const input = document.getElementById('mapSearchInput');
+  const wrap = document.querySelector('.map-search-wrap');
+  if (!input) return;
+  const i = findCastleByQuery(input.value);
+  if (i < 0) {
+    if (wrap) wrap.classList.add('not-found');
+    return;
+  }
+  if (wrap) wrap.classList.remove('not-found');
+  selectedIndex = i;
+  if (leafletMap) {
+    const c = castles[i];
+    if (leafletMap.getZoom() < 13) leafletMap.setView([c.lat, c.lng], 14, { animate: false });
+    showMapPanel(i);
+  }
+  input.blur();
+}
+
+const mapSearchInput = document.getElementById('mapSearchInput');
+if (mapSearchInput) {
+  mapSearchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); runMapSearch(); }
+  });
+  mapSearchInput.addEventListener('change', runMapSearch);
+  mapSearchInput.addEventListener('input', () => {
+    document.querySelector('.map-search-wrap')?.classList.remove('not-found');
+    document.getElementById('mapSearchClear').style.display = mapSearchInput.value ? 'flex' : 'none';
+  });
+}
+const mapSearchClearBtn = document.getElementById('mapSearchClear');
+if (mapSearchClearBtn) {
+  mapSearchClearBtn.addEventListener('click', () => {
+    mapSearchInput.value = '';
+    mapSearchClearBtn.style.display = 'none';
+    document.querySelector('.map-search-wrap')?.classList.remove('not-found');
+    mapSearchInput.focus();
+  });
+}
+renderMapSearchOptions();
 
 document.getElementById('prevBtn').addEventListener('click', () => { if (index > 0) { index--; renderGuide(); } });
 document.getElementById('nextBtn').addEventListener('click', () => { if (index < castles.length - 1) { index++; renderGuide(); } });
