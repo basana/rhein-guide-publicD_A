@@ -971,7 +971,31 @@
 <script>
 const castles = [
   {
-    id: "koblenz_altstadt", lat: 50.3600, lng: 7.5978,
+    // Входной экран (сразу после сплэша, с плитками-указателями). У него
+    // нет lat/lng — он не "настоящая" станция на маршруте, поэтому не
+    // показывается в списках «Точки»/«Легенды» и на карте (исключён явно
+    // по id в renderCastlesList/renderLegendsList и в TOWN_IDS). Свои
+    // отдельные картинки (koblenz_altstadt_main*, формат 4:3) — горизонтальный
+    // кадр нужен, чтобы хватало места под 6 плиток-указателей под фото.
+    // Текст (факты/легенда) намеренно дублирует соседнюю станцию "Кобленц"
+    // ниже — так решили, чтобы оба экрана были содержательны сами по себе.
+    id: "koblenz_altstadt",
+    images: ["koblenz_altstadt_main.jpg", "koblenz_altstadt_main_2.jpg"],
+    name: "Koblenz Old Town & Deutsches Eck", town: "Koblenz", pop: "~114,000",
+    built: "Roman origins / Deutsches Eck 1897", builtRu: "Римское основание / Дойчес-Экк 1897",
+    destroyed: "Damaged in WWII, restored", destroyedRu: "Поврежден в ВОВ, восстановлен",
+    facts: "Koblenz is over 2,000 years old, founded by the Romans as 'Castellum apud Confluentes'. At the Deutsches Eck, the Moselle river flows into the Rhine, overseen by the monumental equestrian statue of Kaiser Wilhelm I.",
+    factsRu: "Кобленцу более 2000 лет, он основан римлянами как «Castellum apud Confluentes». У Дойчес-Экк река Мозель впадает в Рейн под взором монументального конного памятника кайзеру Вильгельму I.",
+    legend: "The city's history is tied to centuries of trade, archbishop-electors, and its pivotal strategic position at the gateway to the Rhine Gorge.",
+    legendRu: "История города связана с веками торговли, курфюрстами-архиепископами и важнейшим стратегическим положением у врат в рейнское ущелье.",
+    say: "Welcome to Koblenz — where the Rhine and Moselle rivers meet at the famous Deutsches Eck.",
+    sayRu: "Добро пожаловать в Кобленц — место слияния Рейна и Мозеля у знаменитого Дойчес-Экк."
+  },
+  {
+    // "Настоящая" станция Кобленц — доступна из «Точки», «Легенды», карты и
+    // обычной навигации вперёд/назад. Картинки квадратные (как у всех
+    // остальных станций), текст — тот же, что и на входном экране выше.
+    id: "koblenz_city", lat: 50.3600, lng: 7.5978,
     images: ["KO_2screen.png", "koblenz_altstadt.jpg", "koblenz_altstadt_2.jpg", "koblenz_altstadt_4.jpg"],
     premiumImage: true, premiumLink: "",
     name: "Koblenz Old Town & Deutsches Eck", town: "Koblenz", pop: "~114,000",
@@ -2107,6 +2131,8 @@ function updateActivePhoto() {
   const dotsEl = document.getElementById('photoDots');
   
   if (imgEl && castlePhotos.length > 0) {
+    const photoBox = imgEl.closest('.photo');
+    if (photoBox) photoBox.style.visibility = '';
     const src = castlePhotos[currentPhotoIdx];
     imgEl.onerror = () => {
       // Картинка ещё не загружена на сервер (404) — запоминаем и тихо убираем
@@ -2114,7 +2140,16 @@ function updateActivePhoto() {
       brokenImages.add(src);
       const i = castlePhotos.indexOf(src);
       if (i >= 0) castlePhotos.splice(i, 1);
-      if (castlePhotos.length === 0) return;
+      if (castlePhotos.length === 0) {
+        // Все картинки этой станции оказались "битыми" (например, из-за
+        // устаревшего кеша 404-ответа в браузере) — вместо пустого места
+        // прячем саму рамку фото, а не оставляем сломанную иконку.
+        imgEl.src = '';
+        imgEl.closest('.photo').style.visibility = 'hidden';
+        if (dotsEl) dotsEl.style.display = 'none';
+        return;
+      }
+      imgEl.closest('.photo').style.visibility = '';
       if (currentPhotoIdx >= castlePhotos.length) currentPhotoIdx = castlePhotos.length - 1;
       updateActivePhoto();
     };
@@ -2179,7 +2214,10 @@ function setPhoto(idx) {
 
 function renderCastlesList() {
   const el = document.getElementById('view-castles');
-  el.innerHTML = castles.map((c, i) => `
+  // Входной экран (koblenz_altstadt) не показываем отдельной карточкой —
+  // чтобы Кобленц не дублировался, в списке только "настоящая" станция
+  // koblenz_city.
+  el.innerHTML = castles.map((c, i) => ({ c, i })).filter(({ c }) => c.id !== 'koblenz_altstadt').map(({ c, i }) => `
     <div class="castle-card" onclick="index=${i}; switchView('guide'); renderGuide();" style="cursor:pointer;">
       <div class="castle-name">${c.name}</div>
       <div class="castle-town">${c.town} • ${lang === 'ru' ? c.builtRu : c.built}</div>
@@ -2189,7 +2227,8 @@ function renderCastlesList() {
 
 function renderLegendsList() {
   const el = document.getElementById('view-legends');
-  const withLegends = castles.filter(c => c.legend);
+  // Та же логика, что и в списке «Точки» — входной экран не дублируем.
+  const withLegends = castles.filter(c => c.legend && c.id !== 'koblenz_altstadt');
   el.innerHTML = withLegends.map(c => `
     <div class="castle-card">
       <div class="castle-name">${c.name}</div>
@@ -2276,7 +2315,7 @@ function renderInfo() {
   if (routeBtn) routeBtn.onclick = () => switchView('route');
 }
 
-const TOWN_IDS = new Set(['koblenz_altstadt', 'braubach', 'boppard', 'bacharach', 'ruedesheim']);
+const TOWN_IDS = new Set(['koblenz_city', 'braubach', 'boppard', 'bacharach', 'ruedesheim']);
 
 function initMap() {
   if (leafletMap) {
