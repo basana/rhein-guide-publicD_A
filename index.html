@@ -68,7 +68,7 @@
   }
 
   .app-name-row { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1 1 auto; }
-  .app-emblem { width: 42px; height: 42px; flex: 0 0 auto; object-fit: contain; }
+  .app-emblem { width: 42px; height: 42px; flex: 0 0 auto; object-fit: contain; opacity: 0.8; }
   .app-name {
     font-size: clamp(17px, 4.6vw, 22px); font-weight: 600; margin: 0;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
@@ -401,13 +401,28 @@
      видны только СНАРУЖИ круга эмблемы (маска скрывает середину), поэтому
      не пересекают сам рисунок. */
   .splash-watermark-wrap {
+    /* Раньше размер/позиция были в жёстких px (127px), привязанных к углу
+       экрана, а не к содержимому фото. Фото ("cover") кадрируется по-разному
+       в зависимости от соотношения сторон видимой области (в Chrome на
+       телефоне из-за адресной строки эта область другая, чем в Safari) —
+       поэтому эмблема "гуляла" относительно горы на фото между браузерами.
+       Точного пиксель-в-пиксель совпадения с конкретной точкой на фото во
+       ВСЕХ браузерах добиться нельзя (фото и браузерное окно — не связанные
+       между собой вещи), но перевод размера с фиксированных px на vw
+       (% ширины экрана) делает эмблему пропорциональной экрану на любом
+       устройстве — а не просто "приклеенной" в одном месте с одним размером
+       что на маленьком, что на большом экране. --wm задаёт базовый размер,
+       остальные слои (лучи, маска) вычисляются от него через calc(), чтобы
+       пропорции между ними не ломались при изменении --wm.
+    */
+    --wm: clamp(96px, 32vw, 150px);
     position: absolute; z-index: 0; pointer-events: none;
     top: env(safe-area-inset-top); left: 0;
-    width: 127px; height: 127px;
+    width: var(--wm); height: var(--wm);
   }
   .splash-rays {
     position: absolute; z-index: 0;
-    top: 50%; left: 50%; width: 210px; height: 210px;
+    top: 50%; left: 50%; width: calc(var(--wm) * 1.6535); height: calc(var(--wm) * 1.6535);
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: repeating-conic-gradient(
@@ -416,8 +431,8 @@
     );
     opacity: 0.7;
     mix-blend-mode: soft-light;
-    -webkit-mask-image: radial-gradient(circle, transparent 0 64px, black 68px, black 100%);
-    mask-image: radial-gradient(circle, transparent 0 64px, black 68px, black 100%);
+    -webkit-mask-image: radial-gradient(circle, transparent 0 calc(var(--wm) * 0.5039), black calc(var(--wm) * 0.5354), black 100%);
+    mask-image: radial-gradient(circle, transparent 0 calc(var(--wm) * 0.5039), black calc(var(--wm) * 0.5354), black 100%);
   }
   .splash img.splash-watermark {
     position: absolute; z-index: 1; pointer-events: none;
