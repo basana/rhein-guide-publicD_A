@@ -68,10 +68,11 @@
   }
 
   .app-name-row { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1 1 auto; }
-  .app-emblem { width: 26px; height: 26px; flex: 0 0 auto; object-fit: contain; }
+  .app-emblem { width: 42px; height: 42px; flex: 0 0 auto; object-fit: contain; }
   .app-name {
-    font-size: clamp(15px, 4vw, 19px); font-weight: 600; margin: 0;
+    font-size: clamp(17px, 4.6vw, 22px); font-weight: 600; margin: 0;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+    color: #7A1026;
   }
   .header-controls { flex: 0 0 auto; }
   .header-controls { display: flex; align-items: center; gap: 6px; font-family: var(--sans); }
@@ -171,17 +172,37 @@
   }
 
   .photo-dots {
-    position: absolute; bottom: 12px; left: 0; right: 0;
-    display: flex; justify-content: center; gap: 6px; z-index: 10;
+    position: absolute; bottom: 10px; left: 0; right: 0;
+    display: flex; justify-content: center; gap: 9px; z-index: 10;
     pointer-events: none;
   }
   .dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: rgba(246, 238, 221, 0.7); border: 1px solid var(--gold);
+    width: 12px; height: 12px; border-radius: 50%;
+    background: rgba(246, 238, 221, 0.85); border: 1.5px solid var(--gold);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.35);
     cursor: pointer; pointer-events: auto; transition: all 0.2s ease;
   }
   .dot.active {
-    background: var(--terracotta); border-color: var(--cream-text); transform: scale(1.25);
+    background: var(--terracotta); border-color: var(--cream-text); transform: scale(1.3);
+  }
+
+  /* Подсказка «картинку можно пролистнуть» — стрелки по бокам фото, гаснут
+     после первого свайпа (см. markPhotoSwiped() в JS) или через пару секунд. */
+  .photo-swipe-hint {
+    position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%);
+    display: flex; justify-content: space-between; padding: 0 10px; z-index: 9;
+    pointer-events: none; opacity: 0.85; transition: opacity 0.4s ease;
+  }
+  .photo-swipe-hint.hidden { opacity: 0; }
+  .photo-swipe-hint span {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(40, 28, 15, 0.38); color: #fff; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    animation: swipeHintPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes swipeHintPulse {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 1; }
   }
 
   .station-title {
@@ -815,6 +836,7 @@
         <img id="mainPhoto" src="" alt="Location photo">
         <div class="badge" id="badge"></div>
         <div class="photo-dots" id="photoDots"></div>
+        <div class="photo-swipe-hint" id="photoSwipeHint" style="display:none;"><span>‹</span><span>›</span></div>
         <div class="premium-badge" id="premiumBadge" style="display:none;">
           <span class="star">✦</span><span id="premiumBadgeLabel">Another view</span>
         </div>
@@ -2024,6 +2046,7 @@ function renderGuide() {
   castlePhotos = allPhotos.filter((f) => !brokenImages.has(f));
   if (castlePhotos.length === 0) castlePhotos = allPhotos.slice(0, 1);
   currentPhotoIdx = 0;
+  photoSwipeHintSeen = false; // новая станция — подсказку можно показать снова
   updateActivePhoto();
 
   document.getElementById('badge').textContent = t.stationLabel(index + 1, castles.length);
@@ -2172,6 +2195,23 @@ function updateActivePhoto() {
       dotsEl.style.display = 'none';
     }
   }
+
+  // Подсказка "можно пролистнуть" — только когда есть что листать, и пока
+  // пользователь ни разу не свайпнул и не кликнул точку на этой станции.
+  const hintEl = document.getElementById('photoSwipeHint');
+  if (hintEl) {
+    hintEl.style.display = (castlePhotos.length > 1 && !photoSwipeHintSeen) ? 'flex' : 'none';
+    hintEl.classList.remove('hidden');
+  }
+}
+
+// Показывается один раз за визит на станцию с несколькими фото, гаснет
+// после первого свайпа/клика по точке — дальше пользователь уже понял.
+let photoSwipeHintSeen = false;
+function markPhotoSwiped() {
+  photoSwipeHintSeen = true;
+  const hintEl = document.getElementById('photoSwipeHint');
+  if (hintEl) hintEl.classList.add('hidden');
 }
 
 let touchStartX = 0;
@@ -2193,6 +2233,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function handleSwipe() {
   const swipeThreshold = 50;
+  if (Math.abs(touchStartX - touchEndX) > swipeThreshold) markPhotoSwiped();
   if (touchStartX - touchEndX > swipeThreshold) {
     if (currentPhotoIdx < castlePhotos.length - 1) {
       currentPhotoIdx++;
@@ -2209,6 +2250,7 @@ function handleSwipe() {
 
 function setPhoto(idx) {
   currentPhotoIdx = idx;
+  markPhotoSwiped();
   updateActivePhoto();
 }
 
@@ -2323,7 +2365,10 @@ function initMap() {
     return;
   }
 
-  leafletMap = L.map('mapDiv', { scrollWheelZoom: true }).setView([50.18, 7.75], 10);
+  // Зум-контрол переносим в левый нижний угол — по умолчанию Leaflet рисует
+  // его в левом верхнем, где он перекрывался полем поиска.
+  leafletMap = L.map('mapDiv', { scrollWheelZoom: true, zoomControl: false }).setView([50.18, 7.75], 10);
+  L.control.zoom({ position: 'bottomleft' }).addTo(leafletMap);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(leafletMap);
 
   const points = [];
