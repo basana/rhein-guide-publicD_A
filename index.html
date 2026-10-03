@@ -527,6 +527,18 @@
     font-size: 20px; font-weight: 700; line-height: 1.25;
   }
   .premium-popup-card p { margin: 0 0 16px; font-size: 14.5px; line-height: 1.55; color: var(--ink); }
+  /* Список "что входит в бонусную версию" в попапе — живее, чем один
+     абзац: каждая функция отдельной строкой с маркером •. */
+  .premium-feature-list {
+    margin: 0 0 16px; padding: 0; list-style: none;
+    font-size: 14.5px; line-height: 1.5; color: var(--ink);
+  }
+  .premium-feature-list li { position: relative; padding-left: 20px; margin-bottom: 9px; }
+  .premium-feature-list li:last-child { margin-bottom: 0; }
+  .premium-feature-list li::before {
+    content: '•'; position: absolute; left: 2px; top: 0;
+    color: var(--terracotta); font-weight: 700; font-size: 17px; line-height: 1.3;
+  }
   .premium-code-input { text-align: left; }
   .premium-popup-close {
     display: block; width: 100%; margin-top: 10px; padding: 8px; border: none; background: none;
@@ -764,7 +776,7 @@
     <img class="vignette-corner br" src="border_image_eck.png" alt="">
     <div class="premium-popup-scroll">
       <h4 id="premiumPopupTitle">Another View</h4>
-      <p id="premiumPopupText">An artistic, painterly view of this place is available in the extended guide. Message the guide for an access code to unlock it.</p>
+      <ul id="premiumPopupText" class="premium-feature-list"></ul>
 
       <div id="premiumLockedBlock">
         <div class="premium-teaser" id="premiumTeaser">
@@ -1549,7 +1561,11 @@ const UI = {
     legendCastle: 'Castle tour', legendTown: 'Town walk',
     premiumBadge: 'Another view',
     premiumTitle: 'Another View',
-    premiumText: 'A painterly, hand-styled view of this place is available in the bonus edition.',
+    premiumFeatures: [
+      'A hand-painted "Another View" of the great sights — not just a photo',
+      'GPS finds your spot and opens the right station by itself — no scrolling, no searching',
+      'The full story, start to finish — every stop, every legend, every tale'
+    ],
     premiumLocked: 'Locked',
     premiumCodePlaceholder: 'Access code',
     premiumUnlockBtn: 'Unlock',
@@ -1559,9 +1575,7 @@ const UI = {
     premiumOpenLink: 'Open the artwork →',
     premiumUnlockedFallback: 'Artwork for this location is on its way — check back soon.',
     premiumTitleGps: 'GPS Auto-Locate',
-    premiumTextGps: 'Let the app sense where you are and open the right station automatically — no scrolling or searching. Available in the bonus edition.',
     premiumTitleRoute: 'Continue Reading',
-    premiumTextRoute: 'The full route guide — every stop, story and legend along the way — is available in the bonus edition.',
     routeReadMore: 'Continue reading →',
     gpsToggle: 'GPS', gpsOn: 'GPS ON',
     gpsLocating: 'Locating…',
@@ -1595,7 +1609,11 @@ const UI = {
     legendCastle: 'Экскурсия в замке', legendTown: 'Прогулка по городу',
     premiumBadge: 'Другой взгляд',
     premiumTitle: 'Другой взгляд',
-    premiumText: 'Авторский живописный вид этого места доступен в бонусной версии.',
+    premiumFeatures: [
+      'Авторская картина — не просто фото, а живописный взгляд на главные места',
+      'GPS сам найдёт, где ты, и откроет нужную станцию — без пролистывания и поиска',
+      'Полная история маршрута — все остановки, все легенды, всё целиком'
+    ],
     premiumLocked: 'Заблокировано',
     premiumCodePlaceholder: 'Код доступа',
     premiumUnlockBtn: 'Разблокировать',
@@ -1605,9 +1623,7 @@ const UI = {
     premiumOpenLink: 'Открыть картину →',
     premiumUnlockedFallback: 'Картина для этого места скоро появится — загляните позже.',
     premiumTitleGps: 'GPS-автоопределение',
-    premiumTextGps: 'Пусть приложение само определит, где вы находитесь, и откроет нужную станцию — без пролистывания и поиска. Доступно в бонусной версии.',
     premiumTitleRoute: 'Читать дальше',
-    premiumTextRoute: 'Полный путеводитель по маршруту — все остановки, истории и легенды — доступен в бонусной версии.',
     routeReadMore: 'Читать дальше →',
     gpsToggle: 'GPS', gpsOn: 'GPS ВКЛ',
     gpsLocating: 'Определяем…',
@@ -2117,6 +2133,15 @@ function renderGuide() {
   applyStaticText();
 }
 
+// Заполняет список "что входит в бонусную версию" (<ul id="premiumPopupText">)
+// пунктами из t.premiumFeatures — один и тот же полный список фич показываем
+// во всех попапах (Другой взгляд / GPS / Читать дальше), чтобы при любом
+// входе человек видел ВСЁ, что получает, а не только то, что его сюда привело.
+function renderPremiumFeatures(pText, t) {
+  if (!pText || !t.premiumFeatures) return;
+  pText.innerHTML = t.premiumFeatures.map((f) => `<li>${f}</li>`).join('');
+}
+
 function applyStaticText() {
   const t = UI[lang];
   const legendCastleEl = document.getElementById('legendCastleLabel');
@@ -2131,7 +2156,7 @@ function applyStaticText() {
   const pTitle = document.getElementById('premiumPopupTitle');
   const pText = document.getElementById('premiumPopupText');
   if (pTitle) pTitle.textContent = t.premiumTitle;
-  if (pText) pText.textContent = t.premiumText;
+  renderPremiumFeatures(pText, t);
 
   const pLocked = document.getElementById('premiumLockedLabel');
   const pCodeInput = document.getElementById('premiumCodeInput');
@@ -2700,17 +2725,15 @@ function openPremiumPopup(kind) {
   const pTeaser = document.getElementById('premiumTeaser');
   if (kind === 'gps') {
     if (pTitle) pTitle.textContent = t.premiumTitleGps;
-    if (pText) pText.textContent = t.premiumTextGps;
     if (pTeaser) pTeaser.style.display = 'none';
   } else if (kind === 'route') {
     if (pTitle) pTitle.textContent = t.premiumTitleRoute;
-    if (pText) pText.textContent = t.premiumTextRoute;
     if (pTeaser) pTeaser.style.display = 'none';
   } else {
     if (pTitle) pTitle.textContent = t.premiumTitle;
-    if (pText) pText.textContent = t.premiumText;
     if (pTeaser) pTeaser.style.display = '';
   }
+  renderPremiumFeatures(pText, t);
   if (isPremiumUnlocked() && kind === 'view') {
     showPremiumUnlockedView();
   } else {
