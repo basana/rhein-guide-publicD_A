@@ -1647,7 +1647,14 @@ const UI = {
   }
 };
 
+// Русский язык временно скрыт (с 04.10.2026 на одну неделю, до 11.10.2026) —
+// после этой даты переключатель RU появится и всё снова заработает само,
+// менять ничего не нужно. Если нужно вернуть раньше — поставьте false.
+const RU_TEMP_DISABLED_UNTIL = new Date('2026-10-11T00:00:00');
+const ruTempDisabled = new Date() < RU_TEMP_DISABLED_UNTIL;
+
 let lang = (function() {
+  if (ruTempDisabled) return 'en';
   try {
     const saved = localStorage.getItem('rhineGuideLang');
     if (saved === 'en' || saved === 'ru') return saved;
@@ -1938,12 +1945,12 @@ const INFO_POPUPS = {
   about: {
     en: {
       title: 'About me',
-      body: `<p>Certified tour guide (BVGD), based in Koblenz. I speak Russian, German and English, and work with tour operators (Travmondo, Saga, Viking) as well as private groups.</p>
+      body: `<p>Certified tour guide (BVGD), based in Koblenz. I speak Russian, German and English, and work with tour operators (Viking, Kuoni / JTB, Saga) as well as private groups.</p>
         <p>Postcards from this app are also available to order — ask via contact.</p>`
     },
     ru: {
       title: 'Обо мне',
-      body: `<p>Сертифицированный гид (BVGD), живу в Кобленце. Говорю по-русски, по-немецки и по-английски, работаю с туроператорами (Travmondo, Saga, Viking), а также с частными группами.</p>
+      body: `<p>Сертифицированный гид (BVGD), живу в Кобленце. Говорю по-русски, по-немецки и по-английски, работаю с туроператорами (Viking, Kuoni / JTB, Saga), а также с частными группами.</p>
         <p>Открытки из этого приложения тоже можно заказать — напишите через контакты.</p>`
     }
   },
@@ -1959,7 +1966,7 @@ const INFO_POPUPS = {
         <p style="margin:18px 0 4px; font-weight:700; color:var(--terracotta);">Guided tours</p>
         <p>As a certified guide (BVGD) I offer city walking tours, hikes in the vineyards and along the Rhine, themed excursions and travel companion services for groups — year-round around Koblenz and the Rhine Gorge.</p>
         <p style="margin:18px 0 4px; font-weight:700; color:var(--terracotta);">About me</p>
-        <p>Certified tour guide (BVGD), based in Koblenz. I speak Russian, German and English, and work with tour operators (Travmondo, Saga, Viking) as well as private groups.</p>
+        <p>Certified tour guide (BVGD), based in Koblenz. I speak Russian, German and English, and work with tour operators (Viking, Kuoni / JTB, Saga) as well as private groups.</p>
         <p>Postcards from this app are also available to order — just ask.</p>`
     },
     ru: {
@@ -1970,7 +1977,7 @@ const INFO_POPUPS = {
         <p style="margin:18px 0 4px; font-weight:700; color:var(--terracotta);">Экскурсии</p>
         <p>Как сертифицированный гид (BVGD) провожу пешеходные экскурсии по городу, походы по виноградникам и вдоль Рейна, тематические экскурсии и сопровождение групп в поездках — круглый год, в Кобленце и Рейнском ущелье.</p>
         <p style="margin:18px 0 4px; font-weight:700; color:var(--terracotta);">Обо мне</p>
-        <p>Сертифицированный гид (BVGD), живу в Кобленце. Говорю по-русски, по-немецки и по-английски, работаю с туроператорами (Travmondo, Saga, Viking), а также с частными группами.</p>
+        <p>Сертифицированный гид (BVGD), живу в Кобленце. Говорю по-русски, по-немецки и по-английски, работаю с туроператорами (Viking, Kuoni / JTB, Saga), а также с частными группами.</p>
         <p>Открытки из этого приложения тоже можно заказать — просто напишите.</p>`
     }
   }
@@ -2614,7 +2621,12 @@ document.getElementById('checkBtn').addEventListener('click', () => {
   renderGuide();
 });
 
+if (ruTempDisabled) {
+  document.querySelectorAll('[data-lang="ru"]').forEach(b => { b.style.display = 'none'; });
+}
+
 function setLang(newLang) {
+  if (ruTempDisabled && newLang === 'ru') return;
   lang = newLang;
   try { localStorage.setItem('rhineGuideLang', lang); } catch (e) {}
   document.querySelectorAll('.pill-btn[data-lang]').forEach(b => b.classList.toggle('active', b.getAttribute('data-lang') === lang));
@@ -2697,7 +2709,11 @@ document.getElementById('splashEnter').addEventListener('click', dismissSplash);
 const PREMIUM_CODE = 'DJJW-NG26';
 const PREMIUM_UNLOCK_KEY = 'rhineGuidePremiumUnlocked';
 
+// ВРЕМЕННО ОТКРЫТО ДЛЯ ВСЕХ (04.10.2026) — гостям негде передать код,
+// поэтому бонус-контент временно доступен без кода. Чтобы вернуть
+// требование кода — удалите строку "if (true) return true;" ниже.
 function isPremiumUnlocked() {
+  if (true) return true;
   try { return localStorage.getItem(PREMIUM_UNLOCK_KEY) === 'true'; } catch (e) { return false; }
 }
 function setPremiumUnlocked() {
@@ -3022,6 +3038,32 @@ if (gpsSpotClearBtn) {
     if (gpsActive && gpsLastLat !== null) updateGpsDistancePanel(gpsLastLat, gpsLastLng);
   });
 }
+
+/* АВТО-ПРИВЯЗКА ТОЧКИ ПО QR-КОДУ ПАРТНЁРА (?spot=...) */
+// Каждое кафе-партнёр получает свой QR-код со ссылкой вида
+// .../?spot=cafe_altstadt — турист сканирует его, и приложение САМО
+// (без вопросов и без нажатий) сохраняет кафе как точку "моё место"
+// и включает GPS, плюс открывает бонусный контент на время сессии.
+// Чтобы подключить новое кафе, добавьте строку в CAFE_SPOTS ниже —
+// id берите латиницей без пробелов, он же идёт в ссылку/QR-код.
+const CAFE_SPOTS = {
+  cafe_altstadt: { lat: 50.3569, lng: 7.5972, label: 'Café Altstadt' }
+  // cafe_zeltinger: { lat: 50.xxxxx, lng: 7.xxxxx, label: 'Café Zeltinger Hof' },
+};
+
+function applySpotFromUrl() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const spotId = params.get('spot');
+    if (!spotId || !CAFE_SPOTS[spotId]) return;
+    const spot = CAFE_SPOTS[spotId];
+    setSavedSpot({ lat: spot.lat, lng: spot.lng, label: spot.label });
+    setPremiumUnlocked();
+    if (!gpsActive) startGps();
+  } catch (e) {}
+}
+applySpotFromUrl();
+
 if (premiumCodeInput) {
   premiumCodeInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') premiumUnlockBtn.click();
