@@ -1686,6 +1686,7 @@ let castlePhotos = [];
 // запоминаем, чтобы не показывать их снова и не плодить "битые" точки в карусели.
 const brokenImages = new Set();
 const IMG_VER = '20261015';
+const jpegAlt = new Set(); // картинки, найденные только как .jpeg (а не .jpg)
 let gpsActive = false;
 let gpsWatchId = null;
 let gpsMarker = null;
@@ -2218,7 +2219,17 @@ function updateActivePhoto() {
     const photoBox = imgEl.closest('.photo');
     if (photoBox) photoBox.style.visibility = '';
     const src = castlePhotos[currentPhotoIdx];
+    const asJpeg = (f) => f.replace(/\.jpg$/i, '.jpeg');
+    let triedJpeg = jpegAlt.has(src);
     imgEl.onerror = () => {
+      // Файла .jpg нет — пробуем один раз такой же с расширением .jpeg
+      // (чтобы не было важно, как файл назван при загрузке).
+      if (!triedJpeg && /\.jpg$/i.test(src)) {
+        triedJpeg = true;
+        jpegAlt.add(src);
+        imgEl.src = asJpeg(src) + '?v=' + IMG_VER;
+        return;
+      }
       // Картинка ещё не загружена на сервер (404) — запоминаем и тихо убираем
       // её из карусели этой станции, вместо битой иконки.
       brokenImages.add(src);
@@ -2240,7 +2251,7 @@ function updateActivePhoto() {
     // ?v=... — защита от кеша: если раньше файла не было (404), браузер мог
     // запомнить "пусто" и не подгружать загруженную позже картинку. При
     // замене/добавлении фото меняйте IMG_VER (например, на новую дату).
-    imgEl.src = src + '?v=' + IMG_VER;
+    imgEl.src = (jpegAlt.has(src) ? asJpeg(src) : src) + '?v=' + IMG_VER;
     // Декоративные "открыточные" картинки (с готовой рамкой по краям, как
     // KO_2screen.png) не должны обрезаться по бокам — для них показываем
     // целиком (contain), а не заполняем рамку кадра с обрезкой (cover),
