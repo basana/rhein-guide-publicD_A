@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#B5602E">
-<meta name="robots" content="noindex, nofollow, noarchive">
 <title>Rhine-Tour-Castles — Koblenz to Bingen</title>
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -232,7 +231,7 @@
 
   /* Всплывающее окно с содержимым пункта (Экскурсии / Контакты / Обо мне) */
   .more-menu-backdrop {
-    position: fixed; inset: 0; z-index: 3100; background: rgba(20,14,6,0.38);
+    position: fixed; inset: 0; z-index: 1390; background: rgba(20,14,6,0.38);
     display: none; opacity: 0; transition: opacity .3s ease;
   }
   .more-menu-backdrop.show { display: block; }
@@ -252,7 +251,7 @@
 
   .more-menu {
     position: fixed; left: 16px; right: 16px; top: 50%; transform: translateY(-50%) scale(0.96);
-    z-index: 3110; background: var(--parchment); border: 1px solid var(--gold);
+    z-index: 1400; background: var(--parchment); border: 1px solid var(--gold);
     box-shadow: 0 14px 36px rgba(20,14,6,0.45); font-family: var(--sans);
     max-width: 420px; margin: 0 auto; box-sizing: border-box;
     display: none; opacity: 0; transition: opacity .3s ease, transform .3s ease;
@@ -475,13 +474,6 @@
     background: rgba(20,14,6,0.45); color: rgba(252,239,221,0.85);
     border: 1px solid rgba(201,160,92,0.55);
   }
-  /* Намёк на будущие языки: инверсия активного EN (светлая заливка, красные буквы и контур), не нажимается */
-  .splash-lang-soon {
-    font-family: var(--sans); font-size: 12px; font-weight: 600;
-    padding: 6px 11px; border-radius: 14px; pointer-events: none; user-select: none;
-    background: var(--cream-text); color: var(--terracotta);
-    border: 1.5px solid var(--terracotta);
-  }
   .splash-lang-btn.active { background: var(--terracotta); color: var(--cream-text); border-color: var(--terracotta); }
 
   /* === ЗНАЧОК «ЭКСКУРСИЯ ВОЗМОЖНА» (там, где гид сам проводит туры) === */
@@ -584,7 +576,6 @@
 
   /* === ИКОНКА ЗАМКА НА КАРТЕ: терракотовый круг + белый силуэт === */
   .castle-marker {
-    transform: scale(var(--ms, 1)); transition: transform .15s;
     width: 34px; height: 34px; border-radius: 50%;
     background: var(--terracotta); border: 2px solid #fff;
     display: flex; align-items: center; justify-content: center;
@@ -698,7 +689,7 @@
      Клики сквозь неё не проходят на подложку (pointer-events:none), закрыть
      можно только явной кнопкой — чтобы пожилой пользователь не промахнулся. */
   .help-bubble-backdrop {
-    position: fixed; inset: 0; z-index: 3100; background: rgba(20,14,6,0.38);
+    position: fixed; inset: 0; z-index: 1390; background: rgba(20,14,6,0.38);
     display: none; opacity: 0; transition: opacity .35s ease; pointer-events: none;
   }
   .help-bubble-backdrop.show { display: block; }
@@ -770,16 +761,12 @@
   <div class="splash-lang">
     <span class="splash-lang-btn" data-lang="en">EN</span>
     <span class="splash-lang-btn" data-lang="ru">RU</span>
-    <span class="splash-lang-soon" aria-disabled="true" title="Coming soon">FR</span>
-    <span class="splash-lang-soon" aria-disabled="true" title="Coming soon">IT</span>
-    <span class="splash-lang-soon" aria-disabled="true" title="Coming soon">ES</span>
   </div>
   <div class="splash-content">
     <p class="splash-eyebrow" id="splashEyebrow">Middle Rhine Valley</p>
     <h1 class="splash-title" id="splashTitle">Your Pace.<br>Your Story.<br>Your Rhine.</h1>
     <p class="splash-tagline" id="splashTagline">Castles, legends and vineyard towns<br>between Koblenz and Bingen —<br>guided at your own rhythm.</p>
     <button class="splash-enter" id="splashEnter"><span id="splashEnterLabel">Begin the Journey</span> →</button>
-    <p style="margin:18px 0 0; font-size:11.5px; opacity:.8;"><a href="#" style="color:inherit;" onclick="event.stopPropagation();openInfoPopup('impressum');return false;">Impressum</a> · <a href="#" style="color:inherit;" onclick="event.stopPropagation();openInfoPopup('privacy');return false;">Datenschutz</a></p>
   </div>
 </div>
 
@@ -1043,14 +1030,14 @@ const castles = [
     // ниже — так решили, чтобы оба экрана были содержательны сами по себе.
     id: "koblenz_altstadt",
     images: ["koblenz_altstadt_main.jpg", "koblenz_altstadt_main_2.jpg", "koblenz_altstadt_main_3.jpg", "koblenz_altstadt_main_4.jpg", "koblenz_altstadt_main_5.jpg"],
-    name: "Koblenz Old Town & German Corner", town: "Koblenz", pop: "~114,000",
-    built: "Roman origins / German Corner 1897", builtRu: "Римское основание / Дойчес-Экк 1897",
+    name: "Koblenz Old Town & Deutsches Eck", town: "Koblenz", pop: "~114,000",
+    built: "Roman origins / Deutsches Eck 1897", builtRu: "Римское основание / Дойчес-Экк 1897",
     destroyed: "Damaged in WWII, restored", destroyedRu: "Поврежден в ВОВ, восстановлен",
-    facts: "Koblenz is over 2,000 years old, founded by the Romans as 'Castellum apud Confluentes'. At the German Corner, the Moselle river flows into the Rhine, overseen by the monumental equestrian statue of Kaiser Wilhelm I.",
+    facts: "Koblenz is over 2,000 years old, founded by the Romans as 'Castellum apud Confluentes'. At the Deutsches Eck, the Moselle river flows into the Rhine, overseen by the monumental equestrian statue of Kaiser Wilhelm I.",
     factsRu: "Кобленцу более 2000 лет, он основан римлянами как «Castellum apud Confluentes». У Дойчес-Экк река Мозель впадает в Рейн под взором монументального конного памятника кайзеру Вильгельму I.",
     legend: "The city's history is tied to centuries of trade, archbishop-electors, and its pivotal strategic position at the gateway to the Rhine Gorge.",
     legendRu: "История города связана с веками торговли, курфюрстами-архиепископами и важнейшим стратегическим положением у врат в рейнское ущелье.",
-    say: "Welcome to Koblenz — where the Rhine and Moselle rivers meet at the famous German Corner.",
+    say: "Welcome to Koblenz — where the Rhine and Moselle rivers meet at the famous Deutsches Eck.",
     sayRu: "Добро пожаловать в Кобленц — место слияния Рейна и Мозеля у знаменитого Дойчес-Экк."
   },
   {
@@ -1060,20 +1047,20 @@ const castles = [
     id: "koblenz_city", lat: 50.3600, lng: 7.5978,
     images: ["koblenz_altstadt.jpg", "koblenz_altstadt_2.jpg", "koblenz_altstadt_3.jpg", "koblenz_altstadt_4.jpg", "koblenz_altstadt_5.jpg"],
     premiumImage: true, premiumLink: "",
-    name: "Koblenz Old Town & German Corner", town: "Koblenz", pop: "~114,000",
-    built: "Roman origins / German Corner 1897", builtRu: "Римское основание / Дойчес-Экк 1897",
+    name: "Koblenz Old Town & Deutsches Eck", town: "Koblenz", pop: "~114,000",
+    built: "Roman origins / Deutsches Eck 1897", builtRu: "Римское основание / Дойчес-Экк 1897",
     destroyed: "Damaged in WWII, restored", destroyedRu: "Поврежден в ВОВ, восстановлен",
-    facts: "Koblenz is over 2,000 years old, founded by the Romans as 'Castellum apud Confluentes'. At the German Corner, the Moselle river flows into the Rhine, overseen by the monumental equestrian statue of Kaiser Wilhelm I.",
+    facts: "Koblenz is over 2,000 years old, founded by the Romans as 'Castellum apud Confluentes'. At the Deutsches Eck, the Moselle river flows into the Rhine, overseen by the monumental equestrian statue of Kaiser Wilhelm I.",
     factsRu: "Кобленцу более 2000 лет, он основан римлянами как «Castellum apud Confluentes». У Дойчес-Экк река Мозель впадает в Рейн под взором монументального конного памятника кайзеру Вильгельму I.",
     legend: "The city's history is tied to centuries of trade, archbishop-electors, and its pivotal strategic position at the gateway to the Rhine Gorge.",
     legendRu: "История города связана с веками торговли, курфюрстами-архиепископами и важнейшим стратегическим положением у врат в рейнское ущелье.",
-    say: "Welcome to Koblenz — where the Rhine and Moselle rivers meet at the famous German Corner.",
+    say: "Welcome to Koblenz — where the Rhine and Moselle rivers meet at the famous Deutsches Eck.",
     sayRu: "Добро пожаловать в Кобленц — место слияния Рейна и Мозеля у знаменитого Дойчес-Экк."
   },
   {
     id: "ehrenbreitstein", lat: 50.3644, lng: 7.6136,
     images: ["ehrenbreitstein.jpg", "ehrenbreitstein_2.jpg", "ehrenbreitstein_3.jpg", "ehrenbreitstein_4.jpg", "ehrenbreitstein_5.jpg"],
-    name: "Ehrenbreitstein Fortress", town: "Koblenz", pop: "~114,000",
+    name: "Festung Ehrenbreitstein", town: "Koblenz", pop: "~114,000",
     built: "16th c. (Prussian fortification 1817–28)", builtRu: "XVI в. (прусская крепость 1817–28)",
     destroyed: "Blown up by French 1801, rebuilt", destroyedRu: "Взорвана французами в 1801, отстроена",
     facts: "Perched 118 meters above the Rhine, Ehrenbreitstein is one of Europe's largest historical fortresses. The current massive stone structure was built by Prussia to guard the strategic river crossing against France.",
@@ -1087,7 +1074,7 @@ const castles = [
     id: "stolzenfels", 
     images: ["stolzenfels.jpg", "stolzenfels_2.jpg", "stolzenfels_3.jpg", "stolzenfels_4.jpg", "stolzenfels_5.jpg"],
     lat: 50.3031061, lng: 7.5921284,
-    name: "Stolzenfels Castle", town: "Koblenz", pop: "~114,000",
+    name: "Schloss Stolzenfels", town: "Koblenz", pop: "~114,000",
     built: "13th c. (rebuilt 1836–42)", builtRu: "XIII век (перестроен в 1836–42)",
     destroyed: "Destroyed by the French", destroyedRu: "Разрушен французами",
     facts: "A castle stood here from the 1200s. It watched over ships on the river and nearby silver mines. French soldiers destroyed it. In the 1830s, Prussia rebuilt it as a grand palace for a future king.",
@@ -1100,7 +1087,7 @@ const castles = [
   {
     id: "lahneck", lat: 50.3065479, lng: 7.6123627,
     images: ["lahneck.jpg", "lahneck_2.jpg", "lahneck_3.jpg", "lahneck_4.jpg", "lahneck_5.jpg"],
-    name: "Lahneck Castle", town: "Lahnstein", pop: "~18,000",
+    name: "Burg Lahneck", town: "Lahnstein", pop: "~18,000",
     built: "13th century", builtRu: "XIII век",
     destroyed: "Destroyed by the French (1689 / 1794)", destroyedRu: "Разрушен французами (1689 и 1794)",
     facts: "Built in the 1200s, right where the small river Lahn meets the Rhine. French troops destroyed it twice. Rebuilt in the 19th century.",
@@ -1113,7 +1100,7 @@ const castles = [
   {
     id: "marksburg", lat: 50.2720119, lng: 7.64926,
     images: ["marksburg.jpg", "marksburg_2.jpg", "marksburg_3.jpg", "marksburg_4.jpg", "marksburg_5.jpg"],
-    name: "Marksburg Castle", town: "Braubach", pop: "~3,000",
+    name: "Marksburg", town: "Braubach", pop: "~3,000",
     built: "c. 1231", builtRu: "около 1231 года",
     destroyed: "Never destroyed", destroyedRu: "Никогда не был разрушен",
     facts: "The only castle on the whole Rhine that was never destroyed. Building started around 1231, with additions over centuries.",
@@ -1154,7 +1141,7 @@ const castles = [
   {
     id: "maus", lat: 50.1719014, lng: 7.695775,
     images: ["maus.jpg", "maus_2.jpg", "maus_3.jpg", "maus_4.jpg", "maus_5.jpg"],
-    name: "Mouse Castle", town: "Wellmich / St. Goarshausen", pop: "—",
+    name: "Burg Maus (\"Mouse Castle\")", town: "Wellmich / St. Goarshausen", pop: "—",
     built: "1356 (started)", builtRu: "начат в 1356 году",
     destroyed: "Never destroyed", destroyedRu: "Никогда не был разрушен",
     facts: "Built from 1356 by the Archbishop of Trier to protect river tolls against rival lords.",
@@ -1167,7 +1154,7 @@ const castles = [
   {
     id: "rheinfels", lat: 50.1544865, lng: 7.704412,
     images: ["rheinfels.jpg", "rheinfels_2.jpg", "rheinfels_3.jpg", "rheinfels_4.jpg", "rheinfels_5.jpg"],
-    name: "Rheinfels Castle", town: "St. Goar", pop: "~2,900",
+    name: "Burg Rheinfels", town: "St. Goar", pop: "~2,900",
     built: "1245", builtRu: "1245 год",
     destroyed: "Destroyed by the French (1794–97)", destroyedRu: "Разрушен французами (1794–97)",
     facts: "Built in 1245 to collect tolls. It grew into the biggest fortress on the Rhine and successfully withstood 28,000 French soldiers in 1692.",
@@ -1180,7 +1167,7 @@ const castles = [
   {
     id: "katz", lat: 50.1519634, lng: 7.7242583,
     images: ["katz.jpg", "katz_2.jpg", "katz_3.jpg", "katz_4.jpg", "katz_5.jpg"],
-    name: "Cat Castle", town: "St. Goarshausen", pop: "~1,300",
+    name: "Burg Katz (\"Cat Castle\")", town: "St. Goarshausen", pop: "~1,300",
     built: "1371", builtRu: "1371 год",
     destroyed: "Blown up by Napoleon (1806)", destroyedRu: "Взорван по приказу Наполеона (1806)",
     facts: "Built in 1371 to challenge rival tolls. Blown up on Napoleon's orders in 1806.",
@@ -1193,7 +1180,7 @@ const castles = [
   {
     id: "loreley", lat: 50.1391667, lng: 7.7280556,
     images: ["loreley.jpg", "loreley_2.jpg", "loreley_3.jpg", "loreley_4.jpg", "loreley_5.jpg"],
-    name: "The Loreley Rock", town: "St. Goarshausen", pop: "—",
+    name: "Loreley-Felsen (\"The Loreley Rock\")", town: "St. Goarshausen", pop: "—",
     built: "Natural rock; legend from 1801", builtRu: "природная скала; легенда — с 1801 года",
     destroyed: "—", destroyedRu: "—",
     facts: "A 132-meter slate cliff at the narrowest and most dangerous point of the Rhine, notorious for historical shipwrecks.",
@@ -1204,22 +1191,9 @@ const castles = [
     sayRu: "Легендарная 132-метровая скала, вдохновлявшая поэтов и пугавшая судоводителей."
   },
   {
-    id: "oberwesel", lat: 50.1075, lng: 7.7264,
-    images: ["oberwesel.jpg", "oberwesel_2.jpg", "oberwesel_3.jpg", "oberwesel_4.jpg", "oberwesel_5.jpg"],
-    name: "Oberwesel — Town Walk", town: "Oberwesel", pop: "~2,900",
-    built: "Town wall: early 13th century, extended in the 14th", builtRu: "Городская стена: начало XIII века, расширена в XIV веке",
-    destroyed: "Town wall largely preserved", destroyedRu: "Городская стена в основном сохранилась",
-    facts: "Oberwesel has one of the best-preserved town walls on the Middle Rhine. Sixteen towers still stand along it. The Ochsenturm (Ox Tower) is one of them. In the town centre rises the Church of Our Lady, a Gothic church begun in 1308, consecrated in 1331 and finished in 1375. Vineyards climb the slopes right behind the houses. Oberwesel is one of the big wine towns of the Middle Rhine, and Riesling is the main grape.",
-    factsRu: "В Обервеселе одна из лучше всего сохранившихся городских стен Среднего Рейна. До сегодняшнего дня стоят шестнадцать башен, среди них Ochsenturm (Башня Быка). В центре города возвышается церковь Богоматери — готический храм: заложен в 1308 году, освящён в 1331-м, завершён в 1375-м. Виноградники поднимаются по склонам прямо за домами. Обервезель — один из больших винных городков Среднего Рейна, главный сорт — рислинг.",
-    legend: "The town is very old. Celts probably lived here first. The Romans later had a station here, where travellers changed horses and slept. Its old name was probably Vosavia. Today you can walk on the old wall and look at the towers one by one.",
-    legendRu: "Город очень древний. Здесь, вероятно, жили кельты. Позже у римлян была здесь станция: путники меняли лошадей и ночевали. Старое имя города, вероятно, Vosavia. Сегодня по старой стене можно пройтись и осмотреть башни одну за другой.",
-    say: "A walled wine town with sixteen towers — the best-preserved town wall on the Rhine.",
-    sayRu: "Винный городок за стенами с шестнадцатью башнями — лучше всего сохранившаяся городская стена на Рейне."
-  },
-  {
-    id: "schoenburg", lat: 50.1010, lng: 7.7321,
+    id: "schoenburg", lat: 50.1081, lng: 7.7270,
     images: ["schoenburg.jpg", "schoenburg_2.jpg", "schoenburg_3.jpg", "schoenburg_4.jpg", "schoenburg_5.jpg"],
-    name: "Schönburg Castle", town: "Oberwesel", pop: "~2,900",
+    name: "Schönburg", town: "Oberwesel", pop: "~2,900",
     built: "12th century (first mentioned 1149)", builtRu: "XII век (впервые упомянут в 1149)",
     destroyed: "Destroyed by the French (1689)", destroyedRu: "Разрушен французами (1689)",
     facts: "The Schönburg stands high above Oberwesel. French troops burned it in 1689. It lay in ruins for almost 200 years. In 1885 an American, Rhinelander from New York, bought it and rebuilt it. Today it is a hotel.",
@@ -1232,7 +1206,7 @@ const castles = [
   {
     id: "gutenfels", lat: 50.0879075, lng: 7.7658988,
     images: ["gutenfels.jpg", "gutenfels_2.jpg", "gutenfels_3.jpg", "gutenfels_4.jpg", "gutenfels_5.jpg"],
-    name: "Gutenfels Castle", town: "Kaub", pop: "~1,000",
+    name: "Burg Gutenfels", town: "Kaub", pop: "~1,000",
     built: "1222", builtRu: "1222 год",
     destroyed: "Partly demolished 1806", destroyedRu: "Частично снесен в 1806",
     facts: "Guarded the Kaub toll station alongside Pfalzgrafenstein. Survived legendary sieges.",
@@ -1245,7 +1219,7 @@ const castles = [
   {
     id: "pfalzgrafenstein", lat: 50.0831239, lng: 7.7655246,
     images: ["pfalzgrafenstein.jpg", "pfalzgrafenstein_2.jpg", "pfalzgrafenstein_3.jpg", "pfalzgrafenstein_4.jpg", "pfalzgrafenstein_5.jpg"],
-    name: "Pfalzgrafenstein Castle", town: "Kaub (river island)", pop: "—",
+    name: "Pfalzgrafenstein", town: "Kaub (river island)", pop: "—",
     built: "From 1326", builtRu: "с 1326 года",
     destroyed: "Never seriously destroyed", destroyedRu: "Никогда не разрушался",
     facts: "A stone ship anchored forever on a rocky island in the middle of the Rhine, built strictly to collect tolls.",
@@ -1272,10 +1246,10 @@ const castles = [
   {
     id: "stahleck", lat: 50.0581089, lng: 7.7657011,
     images: ["stahleck.jpg", "stahleck_2.jpg", "stahleck_3.jpg", "stahleck_4.jpg", "stahleck_5.jpg"],
-    name: "Stahleck Castle", town: "Bacharach", pop: "~1,850",
+    name: "Burg Stahleck", town: "Bacharach", pop: "~1,850",
     built: "12th century (rebuilt 1925–38)", builtRu: "XII век (восстановлен в 1925–38)",
     destroyed: "Blown up by the French 1689", destroyedRu: "Взорван французами в 1689",
-    facts: "Perched on a crag 160 meters above the Rhine, Stahleck Castle was the seat of the Counts Palatine of the Rhine. Destroyed by the French in 1689, it was rebuilt in the 1920s–30s and today serves as a popular youth hostel.",
+    facts: "Perched on a crag 160 meters above the Rhine, Burg Stahleck was the seat of the Counts Palatine of the Rhine. Destroyed by the French in 1689, it was rebuilt in the 1920s–30s and today serves as a popular youth hostel.",
     factsRu: "Возвышаясь на скале в 160 метрах над Рейном, замок Штальек был резиденцией пфальцграфов Рейнских. Разрушен французами в 1689 году, восстановлен в 1920–30-х и сегодня служит популярной молодёжной турбазой.",
     legend: "In 1194, a big wedding took place here between two powerful noble families. People still remember it as the moment that calmed an old, bitter rivalry.",
     legendRu: "В 1194 году здесь сыграли большую свадьбу между двумя могущественными знатными семьями. До сих пор её вспоминают как момент, который погасил старую, ожесточённую вражду.",
@@ -1285,7 +1259,7 @@ const castles = [
   {
     id: "sooneck", lat: 50.019453, lng: 7.8248973,
     images: ["sooneck.jpg", "sooneck_2.jpg", "sooneck_3.jpg", "sooneck_4.jpg", "sooneck_5.jpg"],
-    name: "Sooneck Castle", town: "Niederheimbach", pop: "~750",
+    name: "Burg Sooneck", town: "Niederheimbach", pop: "~750",
     built: "11th–12th c.", builtRu: "XI–XII века",
     destroyed: "Destroyed 1282, again 1689", destroyedRu: "Разрушен в 1282 и 1689",
     facts: "Originally a robber knight stronghold, destroyed by imperial forces and later rebuilt in the 19th century by Prussian royals.",
@@ -1298,7 +1272,7 @@ const castles = [
   {
     id: "reichenstein", lat: 50.0064884, lng: 7.8529685,
     images: ["reichenstein.jpg", "reichenstein_2.jpg", "reichenstein_3.jpg", "reichenstein_4.jpg", "reichenstein_5.jpg"],
-    name: "Reichenstein Castle", town: "Trechtingshausen", pop: "~1,500",
+    name: "Burg Reichenstein", town: "Trechtingshausen", pop: "~1,500",
     built: "11th–13th c.", builtRu: "XI–XIII века",
     destroyed: "Destroyed 1253 and 1282", destroyedRu: "Разрушен в 1253 и 1282",
     facts: "Famous robber knight stronghold captured and destroyed in 1282, later rebuilt in neo-Gothic splendor.",
@@ -1311,7 +1285,7 @@ const castles = [
   {
     id: "rheinstein", lat: 49.9935693, lng: 7.8583103,
     images: ["rheinstein.jpg", "rheinstein_2.jpg", "rheinstein_3.jpg", "rheinstein_4.jpg", "rheinstein_5.jpg"],
-    name: "Rheinstein Castle", town: "Trechtingshausen", pop: "~1,500",
+    name: "Burg Rheinstein", town: "Trechtingshausen", pop: "~1,500",
     built: "c. 1282–1329", builtRu: "около 1282–1329",
     destroyed: "Fell into disrepair", destroyedRu: "Обветшал",
     facts: "The very first Rhine castle to be romanticized and rebuilt in the 19th century by Prince Friedrich of Prussia.",
@@ -1324,10 +1298,10 @@ const castles = [
   {
     id: "ruedesheim", lat: 49.9776, lng: 7.9222,
     images: ["ruedesheim.jpg", "ruedesheim_2.jpg", "ruedesheim_3.jpg", "ruedesheim_4.jpg", "ruedesheim_5.jpg"],
-    name: "Rüdesheim on the Rhine", town: "Rüdesheim", pop: "~10,000",
+    name: "Rüdesheim am Rhein", town: "Rüdesheim", pop: "~10,000",
     built: "Medieval town / Brömserburg 1210", builtRu: "Средневековый город / Брёмзербург 1210",
     destroyed: "Restored historic wine center", destroyedRu: "Восстановленный винный центр",
-    facts: "World-famous wine town at the southern gateway of the gorge. Famous for the Drosselgasse, exceptional Riesling wines, medieval towers, and the Niederwald Monument. The oldest building in town, Brömser Castle (1210), now houses a wine museum.",
+    facts: "World-famous wine town at the southern gateway of the gorge. Famous for the Drosselgasse, exceptional Riesling wines, medieval towers, and the Niederwald Monument. The oldest building in town, Brömserburg (1210), now houses a wine museum.",
     factsRu: "Всемирно известный винный город у южных ворот ущелья. Знаменит Дроссельгассе, рислингами и памятником Нидервальд. Старейшее здание города, Брёмзербург (1210 год), сегодня — музей вина.",
     legend: "The ultimate celebration of Rhine wine culture, music, and romantic river voyages.",
     legendRu: "Главный центр рейнской винной культуры, музыки и романтических речных путешествий.",
@@ -1337,7 +1311,7 @@ const castles = [
   {
     id: "maeuseturm", lat: 49.9720141, lng: 7.8804018,
     images: ["maeuseturm.jpg", "maeuseturm_2.jpg", "maeuseturm_3.jpg", "maeuseturm_4.jpg", "maeuseturm_5.jpg"],
-    name: "The Mouse Tower", town: "Bingen", pop: "~26,000",
+    name: "Mäuseturm (Mouse Tower)", town: "Bingen", pop: "~26,000",
     built: "Toll tower from 1298", builtRu: "Таможенная башня с 1298",
     destroyed: "Destroyed 1689, rebuilt 1855", destroyedRu: "Разрушен в 1689, восстановлен в 1855",
     facts: "A historic signal and toll tower on a tiny island near Bingen, rebuilt in the 19th century.",
@@ -1346,6 +1320,19 @@ const castles = [
     legendRu: "Это самая известная рейнская легенда после Лорелей. Говорят, жестокий епископ во время голода запер голодных людей в амбаре и сжёг их заживо — смеясь, что их крики похожи на писк мышей. После этого армия мышей выследила его и заживо съела прямо здесь, в этой башне. Сильная история — но историки говорят, что этого никогда не было на самом деле. Многие лингвисты считают, что название вообще не про мышей — возможно, это искажённое «Mautturm», то есть просто «таможенная башня».",
     say: "The island tower of Bingen steeped in the legend of greedy Bishop Hatto.",
     sayRu: "Островная башня Бингена, окутанная легендой о жадном епископе."
+  },
+  {
+    id: "hildegard", lat: 49.9924372, lng: 7.9283458,
+    images: ["hildegard.jpg", "hildegard_2.jpg", "hildegard_3.jpg", "hildegard_4.jpg", "hildegard_5.jpg"],
+    name: "Abtei St. Hildegard", town: "Eibingen / Rüdesheim", pop: "—",
+    built: "Founded 1165", builtRu: "Основан в 1165",
+    destroyed: "—", destroyedRu: "—",
+    facts: "Benedictine abbey overlooking the Rhine. Hildegard von Bingen lived here as a visionary mystic, composer, and physician.",
+    factsRu: "Бенедиктинское аббатство над Рейном. Хильдегарда Бингенская жила здесь как мистик, композитор и врач.",
+    legend: "People called her the 'Sibyl of the Rhine,' because of her visions — she said she had seen things since she was a small child. When she died in 1179, her sisters said they saw two rays of light cross the sky above her room. In 2012, the Pope named her a Doctor of the Church — a title given to only a few women in history.",
+    legendRu: "Её называли «Сивиллой Рейна» из-за её видений — она говорила, что видела их с самого детства. Когда она умерла в 1179 году, монахини рассказывали, что видели два луча света, пересёкшихся в небе над её комнатой. В 2012 году папа римский объявил её Учителем Церкви — титул, который в истории получили лишь несколько женщин.",
+    say: "A peaceful spiritual sanctuary founded by the brilliant medieval polymath.",
+    sayRu: "Мирная духовная обитель, основанная выдающейся средневековой мыслительницей."
   }
 ];
 
@@ -1379,7 +1366,7 @@ const routePlaces = [
   {
     title: "Koblenz — where two rivers meet", titleRu: "Кобленц — слияние двух рек",
     place: "Koblenz / Deutsches Eck",
-    text: "The journey begins at the confluence of the Rhine and Moselle. The name Koblenz goes back to the Roman name Castellum apud Confluentes — the settlement at the confluence. The German Corner (Deutsches Eck) itself takes its name from the Teutonic Order, which established a settlement here in 1216.",
+    text: "The journey begins at the confluence of the Rhine and Moselle. The name Koblenz goes back to the Roman name Castellum apud Confluentes — the settlement at the confluence. The Deutsches Eck itself takes its name from the Teutonic Order, which established a settlement here in 1216.",
     textRu: "Путешествие начинается у слияния Рейна и Мозеля. Название Кобленц восходит к римскому «Castellum apud Confluentes» — поселению у слияния рек. Само Дойчес-Экк получило имя от Тевтонского ордена, основавшего здесь поселение в 1216 году.",
     extra: "The present peninsula was shaped in part by the filling of a harbor at the Moselle mouth. The monument to Kaiser Wilhelm I was inaugurated in 1897, destroyed in 1945, and reconstructed in 1993.",
     extraRu: "Нынешний мыс частично сформировался благодаря засыпке гавани в устье Мозеля. Памятник кайзеру Вильгельму I открыли в 1897 году, разрушили в 1945-м и восстановили в 1993-м.",
@@ -1450,7 +1437,7 @@ const routePlaces = [
   {
     title: "St. Goarshausen — the Cat and the Mouse", titleRu: "Санкт-Гоарсхаузен — Кот и Мышь",
     place: "St. Goarshausen / Katz & Maus",
-    text: "Across the river, Cat Castle and Mouse Castle tell a very Rhine-like story: castles were tools of competing powers trying to control tolls and river traffic. 'Maus' was originally known by other names; 'Maus' became a mocking nickname.",
+    text: "Across the river, Burg Katz and Burg Maus tell a very Rhine-like story: castles were tools of competing powers trying to control tolls and river traffic. 'Maus' was originally known by other names; 'Maus' became a mocking nickname.",
     textRu: "На другом берегу Бург-Кац и Бург-Маус рассказывают очень рейнскую историю: замки были инструментами соперничающих держав, боровшихся за контроль над пошлинами и речным движением. «Маус» изначально назывался иначе; «Маус» стало насмешливым прозвищем.",
     extra: "The popular Cat-and-Mouse story reflects a real political rivalry, which is why the names are more than a tourist joke.",
     extraRu: "Популярная история про Кота и Мышь отражает реальное политическое соперничество, поэтому названия — больше, чем туристическая шутка.",
@@ -1523,9 +1510,9 @@ const routePlaces = [
     title: "The vanishing vineyards — wine, then and now",
     titleRu: "Исчезающие виноградники — вино вчера и сегодня",
     place: "Mittelrhein region",
-    text: "In 1900, vineyards covered about 2,200 hectares along the whole Middle Rhine. Today, only about 460 hectares are left — less than a quarter. Two world wars, hard years afterward, and the sheer difficulty of hand-farming these steep slopes all pushed many families to give up their vines.",
+    text: "In 1900, vineyards covered about 2,200 hectares along the whole Mittelrhein. Today, only about 460 hectares are left — less than a quarter. Two world wars, hard years afterward, and the sheer difficulty of hand-farming these steep slopes all pushed many families to give up their vines.",
     textRu: "В 1900 году виноградники на всём Среднем Рейне занимали около 2200 гектаров. Сегодня осталось только около 460 гектаров — меньше четверти. Две мировые войны, тяжёлые годы после них и просто тяжесть ручного труда на таких крутых склонах заставили многие семьи отказаться от своих виноградников.",
-    extra: "Official statistics show the collapse clearly: in 1989 there were 490 wine-growing businesses in the Middle Rhine region. By 1999 that number had fallen to 303. By 2010 it was down to just 149 — roughly a 70% drop in only 20 years. Today about 165 wine-growing businesses remain, and most are small — under 10 hectares each. A town like Bacharach, with almost 1,850 people, counts as one of the bigger villages in the valley. Many neighboring villages, like Niederheimbach, have only around 750 people. Small population, steep vineyards, hard work — that's the real, everyday Middle Rhine behind the postcard view.",
+    extra: "Official statistics show the collapse clearly: in 1989 there were 490 wine-growing businesses in the Mittelrhein region. By 1999 that number had fallen to 303. By 2010 it was down to just 149 — roughly a 70% drop in only 20 years. Today about 165 wine-growing businesses remain, and most are small — under 10 hectares each. A town like Bacharach, with almost 1,850 people, counts as one of the bigger villages in the valley. Many neighboring villages, like Niederheimbach, have only around 750 people. Small population, steep vineyards, hard work — that's the real, everyday Mittelrhein behind the postcard view.",
     extraRu: "Официальная статистика ясно показывает обвал: в 1989 году в регионе Средний Рейн было 490 винодельческих хозяйств. К 1999 году их число упало до 303. К 2010 году — всего до 149, то есть падение примерно на 70% всего за 20 лет. Сегодня в регионе осталось около 165 винодельческих хозяйств, и большинство из них маленькие — меньше 10 гектаров. Такой город, как Бахарах, с почти 1850 жителями, считается одним из крупных посёлков в долине. Многие соседние деревни, например Нидерхаймбах, насчитывают всего около 750 человек. Маленькое население, крутые склоны, тяжёлый труд — вот настоящий, будничный Средний Рейн за красивой картинкой.",
     hook: "A hundred years ago, vineyards covered four times more land than today. Most of that hillside work has simply disappeared.",
     hookRu: "Сто лет назад виноградники занимали в четыре раза больше земли, чем сегодня. Бо́льшая часть этой работы на склонах просто исчезла."
@@ -1534,7 +1521,7 @@ const routePlaces = [
     title: "Bingen and the Mäuseturm — history, then legend",
     titleRu: "Бинген и Mäuseturm — сначала история, потом легенда",
     place: "Bingen / Mäuseturm",
-    text: "HISTORY: Bingen is much older than its romantic tourist image. Celts and then Romans settled here, where the Rhine meets the river Nahe — a natural gateway into the gorge. The little tower on the island nearby, the Mouse Tower, was a real toll and signal station from the 1200s onward, rebuilt in 1855.",
+    text: "HISTORY: Bingen is much older than its romantic tourist image. Celts and then Romans settled here, where the Rhine meets the river Nahe — a natural gateway into the gorge. The little tower on the island nearby, the Mäuseturm, was a real toll and signal station from the 1200s onward, rebuilt in 1855.",
     textRu: "ИСТОРИЯ: Бинген гораздо старше своего романтичного туристического образа. Здесь селились сначала кельты, потом римляне — там, где Рейн встречается с рекой Наэ, естественные ворота в ущелье. Маленькая башня на соседнем острове, Mäuseturm, с XIII века была настоящей таможенной и сигнальной станцией, перестроенной в 1855 году.",
     extra: "LEGEND: Everyone knows the tower as the 'Mouse Tower' — because of the story of cruel Bishop Hatto, who locked hungry people in a barn and was later eaten alive by an army of mice. Historians say this never happened. Interesting detail: many linguists think 'Mäuseturm' isn't about mice at all — it may be a corruption of 'Mautturm,' simply meaning 'toll tower.' The mice may have crept into the name almost by accident.",
     extraRu: "ЛЕГЕНДА: Все знают эту башню как «Мышиную башню» — из-за истории о жестоком епископе Хатто, который запер голодных людей в амбаре, а потом его самого заживо съела армия мышей. Историки говорят, что этого никогда не было. Интересная деталь: многие лингвисты считают, что «Mäuseturm» вообще не про мышей — возможно, это искажённое «Mautturm», то есть просто «таможенная башня». Мыши, похоже, попали в название почти случайно.",
@@ -1676,7 +1663,7 @@ const UI = {
 // Русский язык временно скрыт (с 04.10.2026 на одну неделю, до 11.10.2026) —
 // после этой даты переключатель RU появится и всё снова заработает само,
 // менять ничего не нужно. Если нужно вернуть раньше — поставьте false.
-const RU_TEMP_DISABLED_UNTIL = new Date('2099-01-01T00:00:00');
+const RU_TEMP_DISABLED_UNTIL = new Date('2026-10-11T00:00:00');
 const ruTempDisabled = new Date() < RU_TEMP_DISABLED_UNTIL;
 
 let lang = (function() {
@@ -1698,6 +1685,7 @@ let castlePhotos = [];
 // Файлы, которые при попытке загрузки дали 404 (ещё не загружены на сервер) —
 // запоминаем, чтобы не показывать их снова и не плодить "битые" точки в карусели.
 const brokenImages = new Set();
+const IMG_VER = '20261015';
 let gpsActive = false;
 let gpsWatchId = null;
 let gpsMarker = null;
@@ -1971,7 +1959,7 @@ const INFO_POPUPS = {
   about: {
     en: {
       title: 'About me',
-      body: `<p>Certified tour guide (BVGD), based in Koblenz. I speak German and English, and work with tour operators as well as private groups.</p>
+      body: `<p>Certified tour guide (BVGD), based in Koblenz. I speak Russian, German and English, and work with tour operators (Viking, Kuoni / JTB, Saga) as well as private groups.</p>
         <p>Postcards from this app are also available to order — ask via contact.</p>`
     },
     ru: {
@@ -1983,45 +1971,6 @@ const INFO_POPUPS = {
   // Объединённая карточка для вкладки «Контакты» — доступна с любого экрана
   // (в отличие от указателей на входе, которые видны только на станции 0),
   // поэтому собирает все три раздела (Контакты/Экскурсии/Обо мне) в одном месте.
-  impressum: {
-    en: {
-      title: 'Impressum / Legal notice',
-      body: `<p style="margin:0 0 4px; font-weight:700; color:var(--terracotta);">Angaben gemäß § 5 DDG</p>
-        <p>Anatoly Basin<br>Zertifizierter Gästeführer der Stadt Koblenz<br>Mitglied der BVGD<br>Straßburger Straße 9<br>56070 Koblenz</p>
-        <p>Telefon / WhatsApp: <a href="tel:+491772850207">+49 177 285 0207</a><br>E-Mail: <a href="mailto:allyearoundtour@gmail.com">allyearoundtour@gmail.com</a></p>
-        <p>Kleinunternehmer gemäß § 19 UStG – es wird keine Umsatzsteuer ausgewiesen.</p>
-        <p>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV: Anatoly Basin, Anschrift wie oben.</p>
-        <p style="margin:18px 0 4px; font-weight:700; color:var(--terracotta);">Legal notice</p>
-        <p>Anatoly Basin<br>Certified tour guide of the City of Koblenz<br>Member of the BVGD<br>Straßburger Straße 9<br>56070 Koblenz, Germany</p>
-        <p>Phone / WhatsApp: <a href="tel:+491772850207">+49 177 285 0207</a><br>E-mail: <a href="mailto:allyearoundtour@gmail.com">allyearoundtour@gmail.com</a></p>
-        <p>Small business under § 19 UStG (German VAT Act) – no VAT is charged.</p>
-        <p style="margin:18px 0 4px; font-weight:700; color:var(--terracotta);">Haftung für Inhalte / Liability</p>
-        <p>Die Inhalte dieser App wurden mit Sorgfalt erstellt. Für Richtigkeit, Vollständigkeit und Aktualität kann jedoch keine Gewähr übernommen werden. Kartendaten: © OpenStreetMap-Mitwirkende.</p>
-        <p>The content of this app has been prepared with care, but no guarantee can be given for accuracy, completeness or timeliness. Map data: © OpenStreetMap contributors.</p>`
-    }
-  },
-  privacy: {
-    en: {
-      title: 'Datenschutz / Privacy',
-      body: `<p style="margin:0 0 4px; font-weight:700; color:var(--terracotta);">Datenschutzerklärung</p>
-        <p><b>Verantwortlicher:</b> Anatoly Basin, Straßburger Straße 9, 56070 Koblenz, E-Mail: allyearoundtour@gmail.com.</p>
-        <p><b>Hosting:</b> Diese App wird bei Netlify, Inc. (USA) gehostet. Beim Aufruf verarbeitet der Hoster technisch notwendige Verbindungsdaten (z. B. IP-Adresse, Zeitpunkt) in Server-Logfiles. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (sicherer und stabiler Betrieb).</p>
-        <p><b>Reichweitenmessung:</b> Wir nutzen GoatCounter, einen datenschutzfreundlichen Zähldienst ohne Cookies und ohne Speicherung personenbezogener Profile. Erfasst werden nur anonyme Angaben wie aufgerufene Seite, Herkunftslink, Browser und Bildschirmgröße. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO.</p>
-        <p><b>Karte:</b> Die Kartenkacheln werden von den Servern der OpenStreetMap Foundation geladen. Dabei wird Ihre IP-Adresse an diese übertragen. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO.</p>
-        <p><b>Standort (GPS):</b> Wenn Sie die Standortfunktion erlauben, wird Ihr Standort nur in Ihrem Gerät für die Kartenanzeige verwendet. Er wird nicht an uns übermittelt oder gespeichert.</p>
-        <p><b>Lokale Speicherung:</b> Die App speichert Einstellungen (z. B. Sprache, besuchte Stationen) im Speicher Ihres Browsers. Diese Daten verlassen Ihr Gerät nicht und können jederzeit in den Browsereinstellungen gelöscht werden.</p>
-        <p><b>Kontakt per E-Mail/WhatsApp:</b> Wenn Sie uns schreiben, verarbeiten wir Ihre Angaben zur Beantwortung Ihrer Anfrage.</p>
-        <p><b>Ihre Rechte:</b> Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch und Datenübertragbarkeit sowie Beschwerde bei einer Aufsichtsbehörde (in Rheinland-Pfalz: Der Landesbeauftragte für den Datenschutz und die Informationsfreiheit).</p>
-        <p style="margin:18px 0 4px; font-weight:700; color:var(--terracotta);">Privacy notice</p>
-        <p><b>Controller:</b> Anatoly Basin, Straßburger Straße 9, 56070 Koblenz, Germany, allyearoundtour@gmail.com.</p>
-        <p><b>Hosting:</b> This app is hosted by Netlify, Inc. (USA). The host processes technical connection data (e.g. IP address, time of access) in server logs.</p>
-        <p><b>Statistics:</b> We use GoatCounter, a privacy-friendly counter without cookies and without personal profiles. Only anonymous data is recorded, such as the page, referring link, browser and screen size.</p>
-        <p><b>Map:</b> Map tiles are loaded from OpenStreetMap Foundation servers, which receive your IP address.</p>
-        <p><b>Location (GPS):</b> If you allow location access, your position is used only on your device to show it on the map. It is not sent to us or stored.</p>
-        <p><b>Local storage:</b> The app keeps settings (e.g. language, visited stations) in your browser. This data does not leave your device and can be deleted in your browser settings.</p>
-        <p><b>Your rights:</b> access, rectification, erasure, restriction, objection, data portability, and the right to lodge a complaint with a supervisory authority.</p>`
-    }
-  },
   guideInfo: {
     en: {
       title: 'Guide & contact',
@@ -2031,9 +1980,8 @@ const INFO_POPUPS = {
         <p style="margin:18px 0 4px; font-weight:700; color:var(--terracotta);">Guided tours</p>
         <p>As a certified guide (BVGD) I offer city walking tours, hikes in the vineyards and along the Rhine, themed excursions and travel companion services for groups — year-round around Koblenz and the Rhine Gorge.</p>
         <p style="margin:18px 0 4px; font-weight:700; color:var(--terracotta);">About me</p>
-        <p>Certified tour guide (BVGD), based in Koblenz. I speak German and English, and work with tour operators as well as private groups.</p>
-        <p>Postcards from this app are also available to order — just ask.</p>
-        <p style="margin:18px 0 0; font-size:12.5px;"><a href="#" onclick="openInfoPopup('impressum');return false;">Impressum / Legal notice</a> · <a href="#" onclick="openInfoPopup('privacy');return false;">Datenschutz / Privacy</a></p>`
+        <p>Certified tour guide (BVGD), based in Koblenz. I speak Russian, German and English, and work with tour operators (Viking, Kuoni / JTB, Saga) as well as private groups.</p>
+        <p>Postcards from this app are also available to order — just ask.</p>`
     },
     ru: {
       title: 'Гид и контакты',
@@ -2044,8 +1992,7 @@ const INFO_POPUPS = {
         <p>Как сертифицированный гид (BVGD) провожу пешеходные экскурсии по городу, походы по виноградникам и вдоль Рейна, тематические экскурсии и сопровождение групп в поездках — круглый год, в Кобленце и Рейнском ущелье.</p>
         <p style="margin:18px 0 4px; font-weight:700; color:var(--terracotta);">Обо мне</p>
         <p>Сертифицированный гид (BVGD), живу в Кобленце. Говорю по-русски, по-немецки и по-английски, работаю с туроператорами (Viking, Kuoni / JTB, Saga), а также с частными группами.</p>
-        <p>Открытки из этого приложения тоже можно заказать — просто напишите.</p>
-        <p style="margin:18px 0 0; font-size:12.5px;"><a href="#" onclick="openInfoPopup('impressum');return false;">Impressum / Legal notice</a> · <a href="#" onclick="openInfoPopup('privacy');return false;">Datenschutz / Privacy</a></p>`
+        <p>Открытки из этого приложения тоже можно заказать — просто напишите.</p>`
     }
   }
 };
@@ -2290,7 +2237,10 @@ function updateActivePhoto() {
       if (currentPhotoIdx >= castlePhotos.length) currentPhotoIdx = castlePhotos.length - 1;
       updateActivePhoto();
     };
-    imgEl.src = src;
+    // ?v=... — защита от кеша: если раньше файла не было (404), браузер мог
+    // запомнить "пусто" и не подгружать загруженную позже картинку. При
+    // замене/добавлении фото меняйте IMG_VER (например, на новую дату).
+    imgEl.src = src + '?v=' + IMG_VER;
     // Декоративные "открыточные" картинки (с готовой рамкой по краям, как
     // KO_2screen.png) не должны обрезаться по бокам — для них показываем
     // целиком (contain), а не заполняем рамку кадра с обрезкой (cover),
@@ -2471,7 +2421,7 @@ function renderInfo() {
   if (routeBtn) routeBtn.onclick = () => switchView('route');
 }
 
-const TOWN_IDS = new Set(['koblenz_city', 'braubach', 'boppard', 'oberwesel', 'bacharach', 'ruedesheim']);
+const TOWN_IDS = new Set(['koblenz_city', 'braubach', 'boppard', 'bacharach', 'ruedesheim']);
 
 function initMap() {
   if (leafletMap) {
@@ -2481,12 +2431,11 @@ function initMap() {
 
   // Зум-контрол переносим в левый нижний угол — по умолчанию Leaflet рисует
   // его в левом верхнем, где он перекрывался полем поиска.
-  leafletMap = L.map('mapDiv', { scrollWheelZoom: true, zoomControl: false, zoomSnap: 0.25 }).setView([50.18, 7.75], 10);
+  leafletMap = L.map('mapDiv', { scrollWheelZoom: true, zoomControl: false }).setView([50.18, 7.75], 10);
   L.control.zoom({ position: 'bottomleft' }).addTo(leafletMap);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(leafletMap);
 
   const points = [];
-  const townMarkers = [];
   const MAP_OFFSETS = {
     marksburg: [0.0035, 0.0030],
     ehrenbreitstein: [0.0045, 0.0035],
@@ -2517,7 +2466,6 @@ function initMap() {
       marker = L.marker([markerLat, markerLng], { icon: castleIcon }).addTo(leafletMap);
     }
 
-    if (TOWN_IDS.has(c.id)) townMarkers.push(marker);
     marker.on('click', () => {
       selectedIndex = i;
       showMapPanel(i);
@@ -2530,16 +2478,6 @@ function initMap() {
     L.polyline(points, { color: '#B5602E', weight: 2, opacity: 0.6, dashArray: '4 6' }).addTo(leafletMap);
     leafletMap.fitBounds(points, { paddingTopLeft: [24, 130], paddingBottomRight: [24, 24] });
   }
-
-  // Размер значков зависит от зума: на мелком масштабе меньше, чтобы не слипались.
-  function updateMarkerScale() {
-    const z = leafletMap.getZoom();
-    const k = Math.max(0.5, Math.min(1, (z - 8) / 3.5));
-    document.getElementById('mapDiv').style.setProperty('--ms', k.toFixed(2));
-    townMarkers.forEach(m => m.setRadius(Math.round(4 + 3 * k)));
-  }
-  leafletMap.on('zoomend', updateMarkerScale);
-  updateMarkerScale();
 
   renderPois();
 
