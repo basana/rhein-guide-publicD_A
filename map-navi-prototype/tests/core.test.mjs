@@ -63,10 +63,15 @@ test("поиск без совпадений не подменяется объ�
   assert.deepEqual(snapshot.activeIntent, { type: "search", query: "объект которого нет" });
 });
 
-test("поиск нормализует диакритические знаки", () => {
-  const core = createMapNaviCore(profile);
-  core.setIntent({ type: "search", query: "ruedesheim" });
-  assert.ok(core.getSnapshot().candidates.some(item => item.id === "ruedesheim"));
+test("поиск понимает немецкие умлауты и варианты их записи", () => {
+  for (const query of ["rüdesheim", "rudesheim", "ruedesheim"]) {
+    const core = createMapNaviCore(profile);
+    core.setIntent({ type: "search", query });
+    assert.ok(
+      core.getSnapshot().candidates.some(item => item.id === "ruedesheim"),
+      "не найдено по запросу: " + query
+    );
+  }
 });
 
 test("расстояние по прямой рассчитывается формулой гаверсинуса", () => {
