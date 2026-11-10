@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101722">
+<title>Map Navi — карта совместного проекта</title>
+<style>
+:root{color-scheme:dark;--bg:#101722;--panel:#172231;--panel2:#1d2a3a;--line:#2b3b4e;--text:#edf3fa;--muted:#a7b5c6;--accent:#79b8ff;--ok:#34d399;--agree:#a78bfa;--progress:#60a5fa;--verify:#fbbf24;--todo:#94a3b8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:20px max(16px,env(safe-area-inset-left));background:linear-gradient(135deg,#17283c,#111a27);border-bottom:1px solid var(--line)}
+.top{max-width:1500px;margin:auto}.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9ab8d8;font-weight:700}
+h1{font-size:clamp(23px,4vw,34px);line-height:1.15;margin:7px 0}.sub{color:var(--muted);max-width:800px}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.pill{border:1px solid #40546b;border-radius:30px;padding:5px 10px;color:#c7d5e5;font-size:12px}
+main{max-width:1500px;margin:auto;padding:14px 16px 40px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+button,.tab,select,input{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+button{cursor:pointer}button:hover,.tab:hover{border-color:#7295bc}.tabs{display:flex;gap:6px;flex-wrap:wrap}.tab{cursor:pointer}.tab.active{background:#29415d;border-color:#6b9ed2}
+input{min-width:190px;flex:1}select{max-width:100%}
+.stats{display:grid;grid-template-columns:repeat(5,minmax(90px,1fr));gap:8px;margin:12px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px}.stat b{display:block;font-size:22px}.stat span{font-size:12px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:12px;align-items:start}
+.stage,.side,.listwrap{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.stagehead{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.stagehead strong{font-size:14px}.hint{font-size:12px;color:var(--muted)}
+.canvas-scroll{overflow:auto;max-height:72vh;min-height:540px;background-image:radial-gradient(#304155 1px,transparent 1px);background-size:22px 22px}
+.canvas{position:relative;width:1120px;height:820px;transform-origin:top left}
+.edges{position:absolute;inset:0;width:1120px;height:820px;pointer-events:none}
+.edge{stroke:#60758d;stroke-width:1.5;opacity:.48}
+.node{position:absolute;width:218px;min-height:68px;text-align:left;padding:10px 11px;border-radius:11px;background:#1b2a3b;border:1px solid #43566d;box-shadow:0 5px 15px #0003;cursor:pointer}
+.node:hover,.node.selected{border-color:#b8d9ff;box-shadow:0 0 0 2px #6ea9e655,0 7px 18px #0005}
+.node .nt{font-weight:700;font-size:13px;display:block}.node .ns{font-size:11px;color:#b5c3d3;display:block;margin-top:3px}.node .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px}
+.side{position:sticky;top:10px}.sidebody{padding:15px}.side h2{font-size:19px;margin:0 0 5px}.side p{color:#c4d0de;font-size:13px}.side .small{font-size:12px;color:var(--muted)}.side a,.listitem a{color:#9ccaff;text-decoration:none}.side a:hover,.listitem a:hover{text-decoration:underline}
+.status{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:4px 9px;font-size:11px;background:#26384b;margin:8px 0}
+.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.actions button{font-size:12px;padding:8px 10px}
+.listwrap{padding:10px}.listitem{padding:13px;border-bottom:1px solid var(--line)}.listitem:last-child{border:0}.listitem h3{font-size:15px;margin:0}.listitem p{font-size:13px;color:#bdc9d7;margin:5px 0}.listmeta{font-size:11px;color:var(--muted)}
+.grouphead{padding:11px 12px;background:#202f41;border-radius:9px;margin:10px 0 4px;font-weight:700;font-size:13px}
+.empty{padding:35px;text-align:center;color:var(--muted)}
+.legend{display:flex;gap:10px;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.footer{color:#8fa1b5;font-size:11px;margin:16px 2px}
+.hidden{display:none!important}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.side{position:static}.canvas-scroll{max-height:62vh}.stats{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){main{padding:10px}.stats{grid-template-columns:repeat(2,1fr)}.toolbar input{min-width:100%}.stagehead{align-items:flex-start}.canvas-scroll{min-height:500px}.sidebody{padding:13px}}
+</style>
+</head>
+<body>
+<header><div class="top"><div class="eyebrow">Совместная рабочая карта · ChatGPT + Anatoly</div><h1>Map Navi — Project Map</h1><div class="sub" id="subtitle">Единая карта решений, реализации и следующих шагов.</div><div class="meta"><span class="pill" id="updated"></span><span class="pill">Рабочая ветка: feature/map-navi-standard</span><span class="pill">main не изменяется</span></div></div></header>
+<main>
+<div class="stats" id="stats"></div>
+<div class="toolbar"><div class="tabs" id="tabs"></div><input id="search" type="search" placeholder="Найти раздел или задачу…"><select id="groupFilter"><option value="">Все направления</option></select><select id="statusFilter"><option value="">Все статусы</option></select></div>
+<div class="layout">
+<section class="stage" id="stage"><div class="stagehead"><strong id="viewTitle">Карта связей</strong><div><button id="zoomOut" aria-label="Уменьшить">−</button> <button id="zoomIn" aria-label="Увеличить">+</button> <button id="resetView">Сброс</button></div></div><div class="canvas-scroll" id="canvasScroll"><div class="canvas" id="canvas"><svg class="edges" id="edges" viewBox="0 0 1120 820"></svg><div id="nodes"></div></div></div><div class="legend" id="legend"></div></section>
+<aside class="side"><div class="stagehead"><strong>Карточка раздела</strong><span class="hint">Нажмите на узел</span></div><div class="sidebody" id="detail"><h2>Добро пожаловать</h2><p>Выберите узел на карте или откройте другое представление. Здесь будут показаны решение, статус, следующие шаги и ссылки.</p><p class="small">Важно: «согласовано», «реализовано» и «проверено» — разные состояния.</p></div></aside>
+</div>
+<div class="footer" id="foot"></div>
+</main>
+<script>
+const DATA_URL='project-map-data.json';
+const STATUS={done:{label:'Сделано / зафиксировано',color:'#34d399'},agreed:{label:'Согласовано, не реализовано',color:'#a78bfa'},progress:{label:'В работе',color:'#60a5fa'},verify:{label:'Требует проверки',color:'#fbbf24'},todo:{label:'Запланировано',color:'#94a3b8'}};
+let data=null,view='map',selected=null,scale=1;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function filtered(){const q=$('search').value.trim().toLowerCase(),g=$('groupFilter').value,s=$('statusFilter').value;return data.nodes.filter(n=>(!q||(n.title+' '+n.subtitle+' '+n.summary+' '+n.details).toLowerCase().includes(q))&&(!g||n.group===g)&&(!s||n.status===s))}
+function group(id){return data.groups.find(g=>g.id===id)}
+function statusTag(s){const v=STATUS[s]||STATUS.todo;return '<span class="status"><i style="width:7px;height:7px;border-radius:50%;background:'+v.color+'"></i>'+v.label+'</span>'}
+function renderStats(){const counts={};data.nodes.forEach(n=>counts[n.status]=(counts[n.status]||0)+1);const items=[['Узлов',data.nodes.length],['Связей',data.edges.length],['Сделано',counts.done||0],['Согласовано',counts.agreed||0],['Открыто',data.nodes.filter(n=>n.status!=='done').length]];$('stats').innerHTML=items.map(x=>'<div class="stat"><b>'+x[1]+'</b><span>'+x[0]+'</span></div>').join('')}
+function renderTabs(){$('tabs').innerHTML=[['map','Карта'],['list','Все разделы'],['open','Открытые задачи'],['links','Ссылки']].map(([id,t])=>'<button class="tab '+(view===id?'active':'')+'" data-view="'+id+'">'+t+'</button>').join('');document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;render()})}
+function detail(n){selected=n.id;const g=group(n.group);$('detail').innerHTML='<div class="small">'+esc(g.title)+'</div><h2>'+esc(n.title)+'</h2><div class="small">'+esc(n.subtitle)+'</div>'+statusTag(n.status)+'<p><b>Кратко</b><br>'+esc(n.summary)+'</p><p><b>Что зафиксировано</b><br>'+esc(n.details)+'</p><p><b>Источник / место</b><br>'+esc(n.where||'Не указано')+'</p><p><b>Следующий шаг</b><br>'+esc(n.next||'Не определён')+'</p>'+(n.links?.length?'<p><b>Ссылки</b><br>'+n.links.map(l=>'↗ <a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.label)+'</a>').join('<br>')+'</p>':'')+'<div class="actions"><button onclick="copyNode(\''+n.id+'\')">Скопировать карточку</button></div>';document.querySelectorAll('.node').forEach(el=>el.classList.toggle('selected',el.dataset.id===n.id))}
+window.copyNode=id=>{const n=data.nodes.find(x=>x.id===id);const t=[n.title,n.subtitle,'Статус: '+STATUS[n.status].label,'Решение: '+n.details,'Следующий шаг: '+n.next,'Источник: '+n.where].join('\n\n');if(navigator.clipboard?.writeText)navigator.clipboard.writeText(t).then(()=>{});};
+function renderMap(nodes){$('viewTitle').textContent='Интерактивная карта связей';$('canvas').style.transform='scale('+scale+')';const positions={};
+const cols={navigation:40,access:320,commerce:600,partners:880,live:40,postcards:320,technical:600,governance:880};
+const rows={navigation:0,access:0,commerce:0,partners:0,live:1,postcards:1,technical:1,governance:1};
+const counters={};nodes.forEach(n=>{const i=counters[n.group]||0;counters[n.group]=i+1;positions[n.id]={x:cols[n.group],y:(rows[n.group]===0?35:450)+i*112}});
+const visible=new Set(nodes.map(n=>n.id));$('edges').innerHTML=data.edges.filter(e=>visible.has(e[0])&&visible.has(e[1])).map(e=>{const a=positions[e[0]],b=positions[e[1]];return a&&b?'<line class="edge" x1="'+(a.x+109)+'" y1="'+(a.y+34)+'" x2="'+(b.x+109)+'" y2="'+(b.y+34)+'"/>':''}).join('');
+$('nodes').innerHTML=nodes.map(n=>{const p=positions[n.id],g=group(n.group),s=STATUS[n.status];return '<button class="node '+(selected===n.id?'selected':'')+'" data-id="'+n.id+'" style="left:'+p.x+'px;top:'+p.y+'px;border-left:4px solid '+g.color+'"><span class="nt"><i class="dot" style="background:'+s.color+'"></i>'+esc(n.title)+'</span><span class="ns">'+esc(n.subtitle)+'</span></button>'}).join('');
+document.querySelectorAll('.node').forEach(el=>el.onclick=()=>detail(data.nodes.find(n=>n.id===el.dataset.id)));
+$('legend').innerHTML=Object.entries(STATUS).map(([k,v])=>'<span><i style="background:'+v.color+'"></i>'+v.label+'</span>').join('');
+}
+function renderList(nodes,openOnly=false,linksOnly=false){$('viewTitle').textContent=linksOnly?'Ссылки проекта':openOnly?'Открытые задачи':'Все разделы';const wrap=document.createElement('div');wrap.className='listwrap';let html='';
+if(linksOnly){for(const n of nodes)for(const l of n.links||[])html+='<div class="listitem"><h3>'+esc(l.label)+'</h3><p>'+esc(n.title)+'</p><a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.url)+'</a></div>'}
+else{for(const g of data.groups){const arr=nodes.filter(n=>n.group===g.id);if(!arr.length)continue;html+='<div class="grouphead" style="border-left:4px solid '+g.color+'">'+esc(g.title)+' · '+arr.length+'</div>';for(const n of arr)html+='<div class="listitem"><h3>'+esc(n.title)+'</h3><div class="listmeta">'+esc(n.subtitle)+' · '+STATUS[n.status].label+'</div><p>'+esc(n.summary)+'</p><button data-open="'+n.id+'">Открыть карточку</button></div>'}}
+wrap.innerHTML=html||'<div class="empty">Ничего не найдено.</div>';$('stage').innerHTML='<div class="stagehead"><strong id="viewTitle">'+$('viewTitle').textContent+'</strong><span class="hint">'+nodes.length+' разделов</span></div>'; $('stage').appendChild(wrap);wrap.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>detail(data.nodes.find(n=>n.id===b.dataset.open)));$('legend').innerHTML=''}
+function render(){renderTabs();const nodes=filtered();if(view==='map'){if(!$('canvas')){$('stage').innerHTML='<div class="stagehead"><strong id="viewTitle">Интерактивная карта связей</strong><div><button id="zoomOut">−</button> <button id="zoomIn">+</button> <button id="resetView">Сброс</button></div></div><div class="canvas-scroll" id="canvasScroll"><div class="canvas" id="canvas"><svg class="edges" id="edges" viewBox="0 0 1120 820"></svg><div id="nodes"></div></div></div><div class="legend" id="legend"></div>';}$('zoomIn').onclick=()=>{scale=Math.min(1.4,scale+.1);renderMap(filtered())};$('zoomOut').onclick=()=>{scale=Math.max(.6,scale-.1);renderMap(filtered())};$('resetView').onclick=()=>{scale=1;$('canvasScroll').scrollTo(0,0);renderMap(filtered())};renderMap(nodes)}else renderList(nodes,view==='open',view==='links')}
+function init(){ $('subtitle').textContent=data.meta.subtitle+' · '+data.meta.scope;$('updated').textContent='Обновлено: '+data.meta.updated;$('foot').textContent='Источник данных: project-map-data.json · Ветка: '+data.meta.branch+' · Карта является рабочей спецификацией, а не подтверждением реализации.';data.groups.forEach(g=>$('groupFilter').add(new Option(g.title,g.id)));Object.entries(STATUS).forEach(([k,v])=>$('statusFilter').add(new Option(v.label,k)));renderStats();$('search').oninput=render;$('groupFilter').onchange=render;$('statusFilter').onchange=render;render()}
+fetch(DATA_URL).then(r=>{if(!r.ok)throw new Error('Не удалось загрузить project-map-data.json');return r.json()}).then(d=>{data=d;init()}).catch(e=>{$('stage').innerHTML='<div class="empty">Ошибка загрузки данных карты: '+esc(e.message)+'. Убедитесь, что project-map-data.json находится рядом с project-map.html.</div>'});
+</script>
+</body></html>
