@@ -1,12 +1,18 @@
 const LOCATION_STATES = new Set(["off", "locating", "active", "error"]);
 const VIEW_MODES = new Set(["follow", "free"]);
 
-function normalizeText(value) {
-  return String(value || "")
+function normalizeTextVariants(value) {
+  const lower = String(value || "").toLocaleLowerCase();
+  const plain = lower.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+  const german = lower
+    .replace(/ä/g, "ae")
+    .replace(/ö/g, "oe")
+    .replace(/ü/g, "ue")
+    .replace(/ß/g, "ss")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .toLocaleLowerCase()
     .trim();
+  return [...new Set([plain, german].filter(Boolean))];
 }
 
 export function haversineMeters(lat1, lng1, lat2, lng2) {
@@ -125,12 +131,13 @@ export function createMapNaviCore(profile) {
     } else if (intent.type === "object") {
       matches = objects.filter(object => object.id === intent.objectId);
     } else if (intent.type === "search") {
-      const query = normalizeText(intent.query);
+      const queryVariants = normalizeTextVariants(intent.query);
       matches = objects.filter(object => {
-        const haystack = [object.name, object.town, ...(object.searchTerms || [])]
-          .map(normalizeText)
-          .join(" ");
-        return haystack.includes(query);
+        const fields = [object.name, object.town, ...(object.searchTerms || [])];
+        const haystackVariants = fields.flatMap(normalizeTextVariants);
+        return queryVariants.some(query =>
+          haystackVariants.some(haystack => haystack.includes(query))
+        );
       });
     }
 
