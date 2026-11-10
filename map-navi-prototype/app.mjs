@@ -40,7 +40,9 @@ function setIntent(intent, shouldFit = false) {
 
 function fitCurrentIntent() {
   const snapshot = core.getSnapshot();
-  const candidates = snapshot.candidates.slice(0, 3);
+  const candidates = snapshot.position
+    ? snapshot.candidates.slice(0, 3)
+    : snapshot.candidates;
   const points = [];
 
   if (snapshot.position) points.push([snapshot.position.lat, snapshot.position.lng]);
@@ -68,7 +70,8 @@ function renderMarkers(snapshot) {
     const category = categoryInfo(item.category);
     const selected = snapshot.activeIntent.type === "object" &&
       snapshot.activeIntent.objectId === item.id;
-    const marker = L.circleMarker([item.lat, item.lng], {
+    const offset = item.markerOffset || [0, 0];
+    const marker = L.circleMarker([item.lat + offset[0], item.lng + offset[1]], {
       radius: selected ? 10 : 7,
       color: "#fff",
       weight: selected ? 3 : 2,
@@ -136,7 +139,15 @@ function renderCard(snapshot) {
     image.hidden = false;
     image.src = item.image;
     image.alt = item.name;
-    image.onerror = () => { image.hidden = true; };
+    let triedJpegAlternative = false;
+    image.onerror = () => {
+      if (!triedJpegAlternative && /\.jpg(?:\?.*)?$/i.test(image.src)) {
+        triedJpegAlternative = true;
+        image.src = image.src.replace(/\.jpg(?:\?.*)?$/i, ".jpeg");
+        return;
+      }
+      image.hidden = true;
+    };
   } else {
     image.hidden = true;
   }
