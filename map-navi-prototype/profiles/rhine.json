@@ -1,0 +1,303 @@
+{
+  "id": "upper-middle-rhine",
+  "name": "Средний Рейн",
+  "version": "0.1.0",
+  "source": {
+    "file": "index.html → castles[]",
+    "baseCommit": "de782291cd8eccb8f1ca490be50738a4f2e637f6",
+    "note": "Снимок существующих объектов для изолированного прототипа. Не является заменой исходного каталога."
+  },
+  "map": {
+    "center": [
+      50.18,
+      7.75
+    ],
+    "zoom": 10,
+    "bounds": [
+      [
+        49.947014100000004,
+        7.5571284
+      ],
+      [
+        50.3894,
+        7.9633458
+      ]
+    ]
+  },
+  "categories": [
+    {
+      "id": "castle",
+      "label": "Замки",
+      "labelEn": "Castles",
+      "color": "#A84F2B"
+    },
+    {
+      "id": "town",
+      "label": "Города",
+      "labelEn": "Towns",
+      "color": "#6D7F43"
+    },
+    {
+      "id": "landmark",
+      "label": "Достопримечательности",
+      "labelEn": "Landmarks",
+      "color": "#386C91"
+    }
+  ],
+  "objects": [
+    {
+      "id": "koblenz_city",
+      "name": "Koblenz Old Town & Deutsches Eck",
+      "town": "Koblenz",
+      "lat": 50.36,
+      "lng": 7.5978,
+      "category": "town",
+      "say": "Welcome to Koblenz — where the Rhine and Moselle rivers meet at the famous Deutsches Eck.",
+      "sayRu": "Добро пожаловать в Кобленц — место слияния Рейна и Мозеля у знаменитого Дойчес-Экк.",
+      "image": "../koblenz_altstadt.jpg"
+    },
+    {
+      "id": "ehrenbreitstein",
+      "name": "Festung Ehrenbreitstein",
+      "town": "Koblenz",
+      "lat": 50.3644,
+      "lng": 7.6136,
+      "category": "castle",
+      "say": "A massive cliff-top fortress overlooking the confluence of the two rivers.",
+      "sayRu": "Громадная крепость на скале с видом на слияние двух рек.",
+      "image": "../ehrenbreitstein.jpg",
+      "markerOffset": [
+        0.0045,
+        0.0035
+      ]
+    },
+    {
+      "id": "stolzenfels",
+      "name": "Schloss Stolzenfels",
+      "town": "Koblenz",
+      "lat": 50.3031061,
+      "lng": 7.5921284,
+      "category": "castle",
+      "say": "This castle looks medieval, but most of it is a 19th-century royal romantic masterpiece.",
+      "sayRu": "Этот замок выглядит средневековым, но большая его часть — шедевр романтизма XIX века.",
+      "image": "../stolzenfels.jpg"
+    },
+    {
+      "id": "lahneck",
+      "name": "Burg Lahneck",
+      "town": "Lahnstein",
+      "lat": 50.3065479,
+      "lng": 7.6123627,
+      "category": "castle",
+      "say": "Guarding the mouth of the Lahn river with dramatic medieval towers.",
+      "sayRu": "Охраняет устье реки Лан своими впечатляющими средневековыми башнями.",
+      "image": "../lahneck.jpg"
+    },
+    {
+      "id": "marksburg",
+      "name": "Marksburg",
+      "town": "Braubach",
+      "lat": 50.2720119,
+      "lng": 7.64926,
+      "category": "castle",
+      "say": "The ultimate intact medieval fortress perched high above Braubach.",
+      "sayRu": "Единственная уцелевшая средневековая крепость над Браубахом.",
+      "image": "../marksburg.jpg",
+      "markerOffset": [
+        0.0035,
+        0.003
+      ]
+    },
+    {
+      "id": "braubach",
+      "name": "Braubach & Historic Town",
+      "town": "Braubach",
+      "lat": 50.2735,
+      "lng": 7.648,
+      "category": "town",
+      "say": "A charming half-timbered town nestled beneath the mighty Marksburg.",
+      "sayRu": "Очаровательный фахверковый городок у подножия могучего Марксбурга.",
+      "image": "../braubach.jpg"
+    },
+    {
+      "id": "boppard",
+      "name": "Boppard (Bopparder Hamm)",
+      "town": "Boppard",
+      "lat": 50.2319,
+      "lng": 7.5925,
+      "category": "town",
+      "say": "Home to the largest loop of the Rhine and famous steep-slope vineyards.",
+      "sayRu": "Родина величайшей излучины Рейна и знаменитых крутых виноградников.",
+      "image": "../boppard.jpg"
+    },
+    {
+      "id": "maus",
+      "name": "Burg Maus (\"Mouse Castle\")",
+      "town": "Wellmich / St. Goarshausen",
+      "lat": 50.1719014,
+      "lng": 7.695775,
+      "category": "castle",
+      "say": "Built as a strategic counter-weight to rival castles across the valley.",
+      "sayRu": "Построен как стратегический противовес замкам-соперникам.",
+      "image": "../maus.jpg"
+    },
+    {
+      "id": "rheinfels",
+      "name": "Burg Rheinfels",
+      "town": "St. Goar",
+      "lat": 50.1544865,
+      "lng": 7.704412,
+      "category": "castle",
+      "say": "The sprawling ruins of the largest military fortress on the Middle Rhine.",
+      "sayRu": "Обширные руины крупнейшей военной крепости Среднего Рейна.",
+      "image": "../rheinfels.jpg"
+    },
+    {
+      "id": "katz",
+      "name": "Burg Katz (\"Cat Castle\")",
+      "town": "St. Goarshausen",
+      "lat": 50.1519634,
+      "lng": 7.7242583,
+      "category": "castle",
+      "say": "The proud 'Cat' castle standing guard above St. Goarshausen.",
+      "sayRu": "Гордый замок «Кот», охраняющий берег над Санкт-Гоарсхаузеном.",
+      "image": "../katz.jpg"
+    },
+    {
+      "id": "loreley",
+      "name": "Loreley-Felsen (\"The Loreley Rock\")",
+      "town": "St. Goarshausen",
+      "lat": 50.1391667,
+      "lng": 7.7280556,
+      "category": "landmark",
+      "say": "The legendary 132-meter cliff that inspired poets and frightened boatmen.",
+      "sayRu": "Легендарная 132-метровая скала, вдохновлявшая поэтов и пугавшая судоводителей.",
+      "image": "../loreley.jpg"
+    },
+    {
+      "id": "schoenburg",
+      "name": "Schönburg",
+      "town": "Oberwesel",
+      "lat": 50.1081,
+      "lng": 7.727,
+      "category": "castle",
+      "say": "A hilltop castle above Oberwesel — rebuilt by an American, now a hotel.",
+      "sayRu": "Замок на холме над Обервезелем — восстановлен американцем, теперь отель.",
+      "image": "../schoenburg.jpg"
+    },
+    {
+      "id": "gutenfels",
+      "name": "Burg Gutenfels",
+      "town": "Kaub",
+      "lat": 50.0879075,
+      "lng": 7.7658988,
+      "category": "castle",
+      "say": "Towering high above Kaub and the island toll castle.",
+      "sayRu": "Возвышается над Каубом и островным замком-таможней.",
+      "image": "../gutenfels.jpg"
+    },
+    {
+      "id": "pfalzgrafenstein",
+      "name": "Pfalzgrafenstein",
+      "town": "Kaub (river island)",
+      "lat": 50.0831239,
+      "lng": 7.7655246,
+      "category": "castle",
+      "say": "The unique stone toll castle sitting on a tiny island in the middle of the river.",
+      "sayRu": "Уникальный каменный замок-таможня на крошечном острове посреди реки.",
+      "image": "../pfalzgrafenstein.jpg"
+    },
+    {
+      "id": "bacharach",
+      "name": "Bacharach",
+      "town": "Bacharach",
+      "lat": 50.0581089,
+      "lng": 7.7657011,
+      "category": "town",
+      "say": "A quintessential medieval wine town on the Rhine.",
+      "sayRu": "Изумительный средневековый винный городок на Рейне.",
+      "image": "../bacharach.jpg"
+    },
+    {
+      "id": "stahleck",
+      "name": "Burg Stahleck",
+      "town": "Bacharach",
+      "lat": 50.0581089,
+      "lng": 7.7657011,
+      "category": "castle",
+      "say": "A hilltop castle-turned-youth-hostel with sweeping views over Bacharach.",
+      "sayRu": "Замок на вершине холма, ныне молодёжная турбаза с видом на Бахарах.",
+      "image": "../stahleck.jpg",
+      "markerOffset": [
+        0.0045,
+        -0.0035
+      ]
+    },
+    {
+      "id": "sooneck",
+      "name": "Burg Sooneck",
+      "town": "Niederheimbach",
+      "lat": 50.019453,
+      "lng": 7.8248973,
+      "category": "castle",
+      "say": "A restored romantic castle with deep ties to the Prussian royal family.",
+      "sayRu": "Восстановленный романтический замок с тесными связями с прусской короной.",
+      "image": "../sooneck.jpg"
+    },
+    {
+      "id": "reichenstein",
+      "name": "Burg Reichenstein",
+      "town": "Trechtingshausen",
+      "lat": 50.0064884,
+      "lng": 7.8529685,
+      "category": "castle",
+      "say": "Perched dramatically above the river with sweeping collections of medieval armor.",
+      "sayRu": "Эффектно возвышается над рекой, храня коллекции средневековых доспехов.",
+      "image": "../reichenstein.jpg"
+    },
+    {
+      "id": "rheinstein",
+      "name": "Burg Rheinstein",
+      "town": "Trechtingshausen",
+      "lat": 49.9935693,
+      "lng": 7.8583103,
+      "category": "castle",
+      "say": "A fairy-tale castle draped in ivy, bridging medieval grit and 19th-century romance.",
+      "sayRu": "Сказочный замок в плюще, соединяющий средневековую суровость и романтику XIX века.",
+      "image": "../rheinstein.jpg"
+    },
+    {
+      "id": "ruedesheim",
+      "name": "Rüdesheim am Rhein",
+      "town": "Rüdesheim",
+      "lat": 49.9776,
+      "lng": 7.9222,
+      "category": "town",
+      "say": "The bustling wine capital at the southern end of the Rhine Gorge, famous for Drosselgasse.",
+      "sayRu": "Оживленная винная столица на южном конце ущелья, знаменитая переулком Дроссельгассе.",
+      "image": "../ruedesheim.jpg"
+    },
+    {
+      "id": "maeuseturm",
+      "name": "Mäuseturm (Mouse Tower)",
+      "town": "Bingen",
+      "lat": 49.9720141,
+      "lng": 7.8804018,
+      "category": "landmark",
+      "say": "The island tower of Bingen steeped in the legend of greedy Bishop Hatto.",
+      "sayRu": "Островная башня Бингена, окутанная легендой о жадном епископе.",
+      "image": "../maeuseturm.jpg"
+    },
+    {
+      "id": "hildegard",
+      "name": "Abtei St. Hildegard",
+      "town": "Eibingen / Rüdesheim",
+      "lat": 49.9924372,
+      "lng": 7.9283458,
+      "category": "landmark",
+      "say": "A peaceful spiritual sanctuary founded by the brilliant medieval polymath.",
+      "sayRu": "Мирная духовная обитель, основанная выдающейся средневековой мыслительницей.",
+      "image": "../hildegard.jpg"
+    }
+  ]
+}
