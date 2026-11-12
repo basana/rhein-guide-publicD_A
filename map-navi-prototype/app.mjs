@@ -237,7 +237,9 @@ function startGps() {
     // В Free View GPS обновляет координаты и маркер, но не двигает карту.
   }, error => {
     gpsActive = false;
+    if (gpsWatchId !== null) navigator.geolocation.clearWatch(gpsWatchId);
     gpsWatchId = null;
+    hasReceivedGpsFix = false;
     core.setLocationState("error");
     render();
     const messages = {
@@ -279,6 +281,11 @@ async function init() {
 
   map = L.map("map", { zoomControl: false, scrollWheelZoom: true })
     .setView(profile.map.center, profile.map.zoom);
+
+  // Leaflet must recalculate its viewport after iPhone/iPad rotation or resizing.
+  const refreshMapSize = () => requestAnimationFrame(() => map.invalidateSize({ pan: false }));
+  window.addEventListener("resize", refreshMapSize, { passive: true });
+  window.addEventListener("orientationchange", refreshMapSize, { passive: true });
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 18,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
