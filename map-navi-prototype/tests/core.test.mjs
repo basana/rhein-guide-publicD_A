@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { createMapNaviCore, haversineMeters, validateMapProfile } from "../core.mjs";
+import { createMapNaviCore, getCameraAction, haversineMeters, validateMapProfile } from "../core.mjs";
 
 const profile = JSON.parse(
   readFileSync(new URL("../profiles/rhine.json", import.meta.url), "utf8")
@@ -88,4 +88,28 @@ test("остановка GPS очищает координаты, но не ме
   const snapshot = core.getSnapshot();
   assert.equal(snapshot.position, null);
   assert.deepEqual(snapshot.activeIntent, { type: "category", category: "town" });
+});
+
+
+test("GPS camera policy fits once, then pans only in default Follow", () => {
+  const core = createMapNaviCore(profile);
+  core.setPosition({ lat: 50.36, lng: 7.5978 });
+  assert.equal(getCameraAction(core.getSnapshot(), false), "fit-intent");
+  assert.equal(getCameraAction(core.getSnapshot(), true), "pan-user");
+
+  core.setIntent({ type: "category", category: "castle" });
+  assert.equal(getCameraAction(core.getSnapshot(), true), "hold");
+
+  core.setIntent({ type: "object", objectId: "marksburg" });
+  assert.equal(getCameraAction(core.getSnapshot(), true), "hold");
+});
+
+test("GPS camera policy never moves the camera in Free View or before a fix", () => {
+  const core = createMapNaviCore(profile);
+  assert.equal(getCameraAction(core.getSnapshot(), false), "hold");
+
+  core.setPosition({ lat: 50.36, lng: 7.5978 });
+  core.setViewMode("free");
+  assert.equal(getCameraAction(core.getSnapshot(), false), "hold");
+  assert.equal(getCameraAction(core.getSnapshot(), true), "hold");
 });
