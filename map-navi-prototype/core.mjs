@@ -175,3 +175,17 @@ export function createMapNaviCore(profile) {
     getSnapshot
   });
 }
+
+
+/**
+ * Decide how GPS updates may control the map camera.
+ * "fit-intent" is used once after the first valid fix;
+ * later updates may pan only in the default Follow context.
+ */
+export function getCameraAction(snapshot, hasReceivedGpsFix) {
+  if (!snapshot || snapshot.viewMode !== "follow" || !snapshot.position) {
+    return "hold";
+  }
+  if (!hasReceivedGpsFix) return "fit-intent";
+  return snapshot.activeIntent?.type === "default" ? "pan-user" : "hold";
+}
