@@ -1,4 +1,4 @@
-import { createMapNaviCore, formatDistance } from "./core.mjs";
+import { createMapNaviCore, formatDistance, getCameraAction } from "./core.mjs";
 
 const $ = id => document.getElementById(id);
 const statusEl = $("status");
@@ -225,17 +225,16 @@ function startGps() {
     render();
 
     const snapshot = core.getSnapshot();
-    if (snapshot.viewMode === "follow") {
-      if (!hasReceivedGpsFix) {
-        // Первый GPS fix устанавливает масштаб и охват активной цели.
-        hasReceivedGpsFix = true;
-        fitCurrentIntent();
-      } else if (snapshot.activeIntent.type === "default") {
-        // В обычном режиме Follow GPS перемещает карту, но не пересчитывает zoom.
-        // При выбранной категории/объекте камера остаётся под управлением Intent.
-        setProgrammaticMove(() => map.panTo([point.lat, point.lng], { animate: false }));
-      }
+    const cameraAction = getCameraAction(snapshot, hasReceivedGpsFix);
+    if (cameraAction === "fit-intent") {
+      hasReceivedGpsFix = true;
+      fitCurrentIntent();
+    } else if (cameraAction === "pan-user") {
+      // В обычном режиме Follow GPS перемещает карту, но не пересчитывает zoom.
+      setProgrammaticMove(() => map.panTo([point.lat, point.lng], { animate: false }));
     }
+    // При активной категории/поиске/объекте камера не перехватывается GPS.
+    // В Free View GPS обновляет координаты и маркер, но не двигает карту.
   }, error => {
     gpsActive = false;
     gpsWatchId = null;
