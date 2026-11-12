@@ -1,0 +1,35 @@
+name: Map Navi Prototype Checks
+
+on:
+  push:
+    branches:
+      - feature/map-navi-core-01
+    paths:
+      - "map-navi-prototype/**"
+      - ".github/workflows/map-navi-tests.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "map-navi-prototype/**"
+      - ".github/workflows/map-navi-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  prototype-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run core and profile tests
+        run: node --test map-navi-prototype/tests/core.test.mjs
+      - name: Check JavaScript syntax
+        run: |
+          node --check map-navi-prototype/core.mjs
+          node --check map-navi-prototype/app.mjs
