@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { createMapNaviCore, getCameraAction, haversineMeters, validateMapProfile } from "../core.mjs";
 
 const profile = JSON.parse(
@@ -112,4 +112,24 @@ test("GPS camera policy never moves the camera in Free View or before a fix", ()
   core.setViewMode("free");
   assert.equal(getCameraAction(core.getSnapshot(), false), "hold");
   assert.equal(getCameraAction(core.getSnapshot(), true), "hold");
+});
+
+
+test("координаты всех объектов находятся в пределах заявленного охвата карты", () => {
+  const [[south, west], [north, east]] = profile.map.bounds;
+  for (const object of profile.objects) {
+    assert.ok(object.lat >= south && object.lat <= north, object.id + ": latitude outside map bounds");
+    assert.ok(object.lng >= west && object.lng <= east, object.id + ": longitude outside map bounds");
+  }
+});
+
+test("каждая указанная фотография существует в репозитории", () => {
+  for (const object of profile.objects) {
+    if (!object.image) continue;
+    const filename = object.image.replace(/^\.\.\//, "");
+    assert.ok(
+      existsSync(new URL("../../" + filename, import.meta.url)),
+      object.id + ": missing image file " + filename
+    );
+  }
 });
