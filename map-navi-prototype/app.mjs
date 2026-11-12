@@ -334,6 +334,7 @@ async function init() {
     renderStatus(core.getSnapshot());
   });
   $("fullMapButton").addEventListener("click", fitFullProfile);
+  $("mapResetButton").addEventListener("click", fitFullProfile);
 
   render();
 }
