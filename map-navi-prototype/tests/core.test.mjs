@@ -93,6 +93,7 @@ test("остановка GPS очищает координаты, но не ме
 
 test("GPS camera policy fits once, then pans only in default Follow", () => {
   const core = createMapNaviCore(profile);
+  core.setViewMode("follow");
   core.setPosition({ lat: 50.36, lng: 7.5978 });
   assert.equal(getCameraAction(core.getSnapshot(), false), "fit-intent");
   assert.equal(getCameraAction(core.getSnapshot(), true), "pan-user");
