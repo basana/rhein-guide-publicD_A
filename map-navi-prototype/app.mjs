@@ -11,6 +11,7 @@ let core;
 let map;
 let gpsWatchId = null;
 let gpsActive = false;
+let hasReceivedGpsFix = false;
 let userMarker = null;
 let programmaticMove = false;
 let moveResetTimer = null;
@@ -195,6 +196,7 @@ function startGps() {
   if (gpsActive) return;
 
   gpsActive = true;
+  hasReceivedGpsFix = false;
   core.setLocationState("locating");
   core.setViewMode("follow");
   render();
@@ -221,7 +223,19 @@ function startGps() {
     }
 
     render();
-    if (core.getSnapshot().viewMode === "follow") fitCurrentIntent();
+
+    const snapshot = core.getSnapshot();
+    if (snapshot.viewMode === "follow") {
+      if (!hasReceivedGpsFix) {
+        // Первый GPS fix устанавливает масштаб и охват активной цели.
+        hasReceivedGpsFix = true;
+        fitCurrentIntent();
+      } else if (snapshot.activeIntent.type === "default") {
+        // В обычном режиме Follow GPS перемещает карту, но не пересчитывает zoom.
+        // При выбранной категории/объекте камера остаётся под управлением Intent.
+        setProgrammaticMove(() => map.panTo([point.lat, point.lng], { animate: false }));
+      }
+    }
   }, error => {
     gpsActive = false;
     gpsWatchId = null;
@@ -248,6 +262,7 @@ function stopGps() {
   if (gpsWatchId !== null) navigator.geolocation.clearWatch(gpsWatchId);
   gpsWatchId = null;
   gpsActive = false;
+  hasReceivedGpsFix = false;
   core.setLocationState("off");
   core.setViewMode("free");
   if (userMarker) {
