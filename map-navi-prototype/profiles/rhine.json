@@ -139,7 +139,7 @@
       "category": "castle",
       "say": "Built as a strategic counter-weight to rival castles across the valley.",
       "sayRu": "Построен как стратегический противовес замкам-соперникам.",
-      "image": "../maus.jpg"
+      "image": "../maus.jpeg"
     },
     {
       "id": "rheinfels",
@@ -150,7 +150,7 @@
       "category": "castle",
       "say": "The sprawling ruins of the largest military fortress on the Middle Rhine.",
       "sayRu": "Обширные руины крупнейшей военной крепости Среднего Рейна.",
-      "image": "../rheinfels.jpg"
+      "image": "../rheinfels.jpeg"
     },
     {
       "id": "katz",
@@ -161,7 +161,7 @@
       "category": "castle",
       "say": "The proud 'Cat' castle standing guard above St. Goarshausen.",
       "sayRu": "Гордый замок «Кот», охраняющий берег над Санкт-Гоарсхаузеном.",
-      "image": "../katz.jpg"
+      "image": "../katz.jpeg"
     },
     {
       "id": "loreley",
@@ -172,7 +172,7 @@
       "category": "landmark",
       "say": "The legendary 132-meter cliff that inspired poets and frightened boatmen.",
       "sayRu": "Легендарная 132-метровая скала, вдохновлявшая поэтов и пугавшая судоводителей.",
-      "image": "../loreley.jpg"
+      "image": "../loreley.jpeg"
     },
     {
       "id": "schoenburg",
@@ -193,8 +193,7 @@
       "lng": 7.7658988,
       "category": "castle",
       "say": "Towering high above Kaub and the island toll castle.",
-      "sayRu": "Возвышается над Каубом и островным замком-таможней.",
-      "image": "../gutenfels.jpg"
+      "sayRu": "Возвышается над Каубом и островным замком-таможней."
     },
     {
       "id": "pfalzgrafenstein",
@@ -253,7 +252,7 @@
       "category": "castle",
       "say": "Perched dramatically above the river with sweeping collections of medieval armor.",
       "sayRu": "Эффектно возвышается над рекой, храня коллекции средневековых доспехов.",
-      "image": "../reichenstein.jpg"
+      "image": "../reichenstein.jpeg"
     },
     {
       "id": "rheinstein",
@@ -264,7 +263,7 @@
       "category": "castle",
       "say": "A fairy-tale castle draped in ivy, bridging medieval grit and 19th-century romance.",
       "sayRu": "Сказочный замок в плюще, соединяющий средневековую суровость и романтику XIX века.",
-      "image": "../rheinstein.jpg"
+      "image": "../rheinstein.jpeg"
     },
     {
       "id": "ruedesheim",
@@ -296,8 +295,7 @@
       "lng": 7.9283458,
       "category": "landmark",
       "say": "A peaceful spiritual sanctuary founded by the brilliant medieval polymath.",
-      "sayRu": "Мирная духовная обитель, основанная выдающейся средневековой мыслительницей.",
-      "image": "../hildegard.jpg"
+      "sayRu": "Мирная духовная обитель, основанная выдающейся средневековой мыслительницей."
     }
   ]
 }
